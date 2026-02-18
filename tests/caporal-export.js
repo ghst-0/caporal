@@ -1,10 +1,10 @@
-"use strict";
+import should from 'should';
 
-/* global Program, should */
+import { Program } from '../lib/program.js';
 
-describe("require('caporal')", () => {
+describe("import('caporal')", () => {
   it(`should return {new Program()}`, () => {
-    const caporal = require('../');
+    const caporal = import('../index.js');
     should(caporal).be.instanceOf(Program);
   });
 });

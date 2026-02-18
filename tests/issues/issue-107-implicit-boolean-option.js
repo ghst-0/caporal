@@ -1,6 +1,9 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, makeArgv, sinon */
+import { Program } from '../../lib/program.js';
+import { logger } from '../utils/callback-logger.js';
+import { makeArgv } from '../utils/make-argv.js';
 
 describe('Issue #107 - Implicit boolean option', () => {
   context('having the shorthand and the longhand', () => {

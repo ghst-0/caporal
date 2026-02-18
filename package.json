@@ -3,8 +3,9 @@
   "description": "A full-featured framework for building command line applications (cli) with node.js",
   "main": "index.js",
   "types": "index.d.ts",
+  "type": "module",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --require ./tests/utils/bootstrap.js --full-trace --recursive -R mocha-unfunk-reporter tests/"
+    "test": "mocha --full-trace --recursive -R mocha-unfunk-reporter tests/"
   },
   "engines": {
     "node": ">= 8"
@@ -26,22 +27,21 @@
   "repository": "mattallty/Caporal.js",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^5.2.0",
+    "mocha": "^11.7.5",
     "mocha-unfunk-reporter": "^0.4.0",
     "oxlint": "^1.48.0",
-    "should": "^11.2.0",
+    "should": "^13.2.3",
     "sinon": "^1.17.7"
   },
   "dependencies": {
     "@alexbosworth/cli-table3": "0.6.1",
     "@alexbosworth/prettyjson": "1.2.2",
     "bluebird": "^3.7.2",
-    "colorette": "^1.0.1",
-    "fast-levenshtein": "^2.0.6",
-    "lodash": "^4.17.23",
+    "colorette": "^2.0.20",
+    "fast-levenshtein": "^3.0.0",
     "micromist": "1.1.0",
-    "winston": "3.7.2",
-    "winston-transport": "4.5.0"
+    "winston": "3.19.0",
+    "winston-transport": "4.9.0"
   },
   "version": "2.0.0"
 }

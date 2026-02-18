@@ -1,7 +1,9 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, makeArgv, sinon */
-
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
+import { makeArgv } from './utils/make-argv.js';
 
 
 describe('Setting up no command() but an action()', () => {

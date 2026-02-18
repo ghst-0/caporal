@@ -1,6 +1,7 @@
-"use strict";
+import sinon from 'sinon';
 
-/* global Program, logger, should, sinon */
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
 
 describe('Execute command', () => {
 

@@ -1,9 +1,13 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, makeArgv, sinon */
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
+import { makeArgv } from './utils/make-argv.js';
 
-const InvalidArgumentValueError = require('../lib/error/invalid-argument-value');
-const WrongNumberOfArgumentError = require('../lib/error/wrong-num-of-arg');
+import { InvalidArgumentValueError } from '../lib/error/invalid-argument-value.js';
+import { WrongNumberOfArgumentError } from '../lib/error/wrong-num-of-arg.js';
+
 const program = new Program();
 
 program

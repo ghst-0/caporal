@@ -1,6 +1,9 @@
-/* global Program, logger, should, makeArgv, sinon */
+import sinon from 'sinon';
+import should from 'should';
 
-
+import { Program } from '../../lib/program.js';
+import { logger } from '../utils/callback-logger.js';
+import { makeArgv } from '../utils/make-argv.js';
 
 describe("Issue #13 - Enter negative number as Argument", function() {
 

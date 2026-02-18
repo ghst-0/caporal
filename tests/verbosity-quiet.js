@@ -1,6 +1,8 @@
-"use strict";
+import should from 'should';
 
-/* global Program, logger, should, makeArgv */
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
+import { makeArgv } from './utils/make-argv.js';
 
 const program = new Program();
 

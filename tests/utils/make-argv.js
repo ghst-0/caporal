@@ -1,5 +1,5 @@
-"use strict";
-
-module.exports = function makeArgv(args) {
+function makeArgv(args) {
   return ['', ''].concat(args);
-};
+}
+
+export { makeArgv };

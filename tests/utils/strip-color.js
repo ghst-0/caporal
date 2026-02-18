@@ -1,5 +1,5 @@
-"use strict";
-
-module.exports = function(str) {
-  return str.replace(/\x1b\[[0-9]+m/ig, '')
+function stripColor(str) {
+  return str.replaceAll(/\x1B\[[0-9]+m/ig, '')
 }
+
+export { stripColor }

@@ -1,8 +1,6 @@
-"use strict";
-
-const winston = require('winston');
-const util = require('util');
-const prettyjson = require('@alexbosworth/prettyjson');
+import util from 'node:util';
+import winston from 'winston';
+import prettyjson from '@alexbosworth/prettyjson';
 
 const CaporalTransport = function (options) {
   options = options || {};
@@ -28,7 +26,7 @@ CaporalTransport.prototype.log = function (level, msg, meta, callback) {
   callback(null, true);
 };
 
-exports.logger = winston.createLogger({
+export const logger = winston.createLogger({
   transports: [
     new (CaporalTransport)()
   ]

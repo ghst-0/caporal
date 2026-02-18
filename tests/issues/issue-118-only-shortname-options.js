@@ -1,9 +1,11 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, makeArgv, sinon */
+import { Program } from '../../lib/program.js';
+import { logger } from '../utils/callback-logger.js';
+import { makeArgv } from '../utils/make-argv.js';
 
 const program = new Program();
-const chalk = require('chalk');
 
 program
   .logger(logger)
@@ -16,7 +18,7 @@ describe('Issue #118 - Unknown option --undefined', () => {
 
     sinon.stub(program, 'fatalError', (err) => {
       should(err.name).eql('MissingOptionError');
-      should(err.originalMessage).equal(`Missing option ${chalk.italic('-z')}.`);
+      should(err.originalMessage).equal(`Missing option -z.`);
     });
     program.option('-z <whatever>', 'Random option', program.INT, null, true);
     program.parse(makeArgv([]));

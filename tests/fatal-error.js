@@ -1,6 +1,9 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, sinon, makeArgv */
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
+import { makeArgv } from './utils/make-argv.js';
 
 let program;
 

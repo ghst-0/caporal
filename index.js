@@ -1,10 +1,8 @@
-"use strict";
-
-const Program = require('./lib/program');
+import { Program } from './lib/program.js';
 const prog = new Program();
 
 
 /**
  * @type {Program}
  */
-module.exports = prog;
+export default prog;

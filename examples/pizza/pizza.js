@@ -1,7 +1,4 @@
-#!/usr/bin/env node
-"use strict";
-
-const prog = require('../..');
+import prog from 'caporal';
 
 prog
   .version('1.0.0')

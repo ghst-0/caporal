@@ -1,9 +1,13 @@
-"use strict";
+import sinon from 'sinon';
+import should from 'should';
 
-/* global Program, logger, should, makeArgv, sinon */
+import { Program } from '../lib/program.js';
+import { logger } from './utils/callback-logger.js';
+import { makeArgv } from './utils/make-argv.js';
+
+import { stripColor } from './utils/strip-color.js';
 
 const program = new Program();
-const stripColor = require('./utils/strip-color')
 
 program
   .logger(logger)

@@ -1,4 +1,4 @@
-import * as prog from 'caporal';
+import prog from 'caporal';
 
 prog
     .version('1.0.0')
