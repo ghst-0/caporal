@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 
 let program;
@@ -13,12 +12,11 @@ describe("program.fatalError()", () => {
     program = new Program();
 
     program
-      .logger(logger)
       .version('1.0.0');
   });
 
-  it(`should call logger.error() and exit(2)`, () => {
-    const error = sinon.stub(logger, 'error').withArgs("\nfoo");
+  it(`should call console.error() and exit(2)`, () => {
+    const error = sinon.stub(console, 'error').withArgs("\nfoo");
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program.fatalError(new Error("foo"));
@@ -27,8 +25,8 @@ describe("program.fatalError()", () => {
     should(exit.callCount).eql(1);
   });
 
-  it(`should call logger.error() and exit(2) - verbose`, () => {
-    const error = sinon.stub(logger, 'error').withArgs(sinon.match('Error: foo\n    at '));
+  it(`should call console.error() and exit(2) - verbose`, () => {
+    const error = sinon.stub(console, 'error').withArgs(sinon.match('Error: foo\n    at '));
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program
@@ -41,8 +39,8 @@ describe("program.fatalError()", () => {
     should(exit.callCount).eql(1);
   });
 
-  it(`should call logger.error() and exit(2) - normal`, () => {
-    const error = sinon.stub(logger, 'error').withArgs("\nfoo");
+  it(`should call console.error() and exit(2) - normal`, () => {
+    const error = sinon.stub(console, 'error').withArgs("\nfoo");
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program
@@ -55,8 +53,8 @@ describe("program.fatalError()", () => {
     should(exit.callCount).eql(1);
   });
 
-  it(`should call logger.error() and exit(2) - async`, (done) => {
-    const error = sinon.stub(logger, 'error').withArgs("\nfoo");
+  it(`should call console.error() and exit(2) - async`, (done) => {
+    const error = sinon.stub(console, 'error').withArgs("\nfoo");
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program
@@ -74,8 +72,8 @@ describe("program.fatalError()", () => {
     });
   });
 
-  it(`should call logger.error() and exit(2) - throw non-exception sync`, () => {
-    const error = sinon.stub(logger, 'error').withArgs("\nfoo");
+  it(`should call console.error() and exit(2) - throw non-exception sync`, () => {
+    const error = sinon.stub(console, 'error').withArgs("\nfoo");
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program
@@ -88,8 +86,8 @@ describe("program.fatalError()", () => {
     should(exit.callCount).eql(1);
   });
 
-  it(`should call logger.error() and exit(2) - throw non-exception async`, (done) => {
-    const error = sinon.stub(logger, 'error').withArgs("\nfoo");
+  it(`should call console.error() and exit(2) - throw non-exception async`, (done) => {
+    const error = sinon.stub(console, 'error').withArgs("\nfoo");
     const exit = sinon.stub(process, 'exit').withArgs(2);
 
     program
@@ -108,7 +106,7 @@ describe("program.fatalError()", () => {
   });
 
   afterEach(function () {
-    logger.error.restore();
+    console.error.restore();
     process.exit.restore();
   })
 

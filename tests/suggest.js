@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 
 import { stripColor } from './utils/strip-color.js';
@@ -10,7 +9,6 @@ import { stripColor } from './utils/strip-color.js';
 const program = new Program();
 
 program
-  .logger(logger)
   .version('1.0.0');
 
 

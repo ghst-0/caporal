@@ -1,13 +1,11 @@
 import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 
 
 const program = new Program();
 
 program
-  .logger(logger)
   .bin('myapp')
   .version('1.0.0')
   .command('foo', 'My foo');
@@ -73,7 +71,7 @@ complete -f -d 'myapp' -c myapp -a "(eval _myapp_completion)"
 describe('./myapp completion zsh|bash|fish', () => {
 
   beforeEach(function () {
-    this.info = sinon.spy(logger, "info");
+    this.info = sinon.spy(console, "info");
   });
 
   afterEach(function () {

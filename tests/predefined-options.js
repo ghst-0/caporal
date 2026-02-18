@@ -2,12 +2,10 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 const program = new Program();
 
 program
-  .logger(logger)
   .version('1.0.0');
 
 describe('Predefined options', function() {

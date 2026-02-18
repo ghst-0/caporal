@@ -2,18 +2,16 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 const program = new Program();
 
 program
-  .logger(logger)
   .version('1.0.0');
 
 
 
 describe('Passing --option invalid-value', () => {
-  var error;
+  let error;
 
   beforeEach(() => {
     program.action(function() {});
@@ -37,8 +35,8 @@ describe('Passing --option invalid-value', () => {
 
       } else if(checkType === 'function') {
         program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function(val) {
-          const o = parseInt(val);
-          if (isNaN(o) || o <= 0) {
+          const o = Number.parseInt(val);
+          if (Number.isNaN(o) || o <= 0) {
             throw new Error("'time' must be a valid number")
           }
           return o;
@@ -90,8 +88,8 @@ describe('Passing --option invalid-value', () => {
     program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function(val) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          const o = parseInt(val);
-          if (isNaN(o) || o <= 0) {
+          const o = Number.parseInt(val);
+          if (Number.isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
           resolve(o);
@@ -110,7 +108,7 @@ describe('Passing --option invalid-value', () => {
 
 
 describe('Passing --option valid-value', () => {
-  var error;
+  let error;
 
   beforeEach(() => {
     program.action(function() {});
@@ -136,8 +134,8 @@ describe('Passing --option valid-value', () => {
           should(options.time).eql(2);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function (val) {
-          const o = parseInt(val);
-          if (isNaN(o) || o <= 0) {
+          const o = Number.parseInt(val);
+          if (Number.isNaN(o) || o <= 0) {
             throw new Error("FOOOO")
           }
           return o;
@@ -208,14 +206,14 @@ describe('Passing --option valid-value', () => {
   });
 
   it(`should succeed for promise check`, done => {
-    var time = 0;
+    let time = 0;
     program.action(function (args, options) { time = options.time });
 
     program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function (val) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          const o = parseInt(val);
-          if (isNaN(o) || o <= 0) {
+          const o = Number.parseInt(val);
+          if (Number.isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
           resolve(o);

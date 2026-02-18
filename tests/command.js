@@ -2,15 +2,13 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 describe('Chaining 2 commands', () => {
 
   const program = new Program();
 
   program
-    .logger(logger)
-    .version('1.0.0')
+      .version('1.0.0')
     .command('foo')
     .action(function() {})
     .command('bar')
@@ -31,8 +29,7 @@ describe('Aliasing a command', () => {
   const action = sinon.stub();
 
   program
-    .logger(logger)
-    .version('1.0.0')
+      .version('1.0.0')
     .command('foo')
     .alias('f')
     .action(action);

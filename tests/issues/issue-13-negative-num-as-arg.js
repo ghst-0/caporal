@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../../lib/program.js';
-import { logger } from '../utils/callback-logger.js';
 import { makeArgv } from '../utils/make-argv.js';
 
 describe("Issue #13 - Enter negative number as Argument", function() {
@@ -13,7 +12,6 @@ describe("Issue #13 - Enter negative number as Argument", function() {
     this.action = sinon.spy();
 
     this.program
-      .logger(logger)
       .version('1.0.0')
       .command('solve', 'Solve quadratic')
       .argument('<a>', 'A', this.program.INT)

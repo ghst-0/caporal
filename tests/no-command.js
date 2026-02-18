@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 
 
@@ -11,7 +10,6 @@ describe('Setting up no command() but an action()', () => {
   const program = new Program();
 
   program
-    .logger(logger)
     .version('1.0.0');
 
   it(`should execute action()`, () => {
@@ -27,7 +25,6 @@ describe('Setting up no command() but an argument() and an action()', () => {
   const program = new Program();
 
   program
-    .logger(logger)
     .version('1.0.0')
     .argument('<foo>', 'My foo arg');
 

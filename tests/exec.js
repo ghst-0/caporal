@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 
 describe('Execute command', () => {
 
@@ -10,7 +9,6 @@ describe('Execute command', () => {
   const actionBar = sinon.stub();
 
   program
-    .logger(logger)
     .version('1.0.0')
     .command('foo')
     .option('--foo-option', 'foo option', program.INT, 1)

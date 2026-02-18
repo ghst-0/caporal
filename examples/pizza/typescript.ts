@@ -7,10 +7,10 @@ prog
     .command('ts', 'Basic typescript example')
     .argument('[arg]', 'argument desc', /^.*$/, 'default arg')
     .option('--option <option>', 'option desc', prog.STRING, 'default option')
-    .action((args, options, logger) => {
-        logger.info('Hello');
-        logger.info(options);
-        logger.info("%j", args);
+    .action((args, options) => {
+        console.info('Hello');
+        console.info(options);
+        console.info("%j", args);
     });
 
 

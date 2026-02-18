@@ -32,10 +32,10 @@ prog
   // --extra will be auto-magicaly autocompleted by providing the user with 3 choices
   .option('-e <ingredients>', 'Add extra ingredients', ['pepperoni', 'onion', 'cheese'])
   .option('--add-ingredients <ingredients>', 'Add extra ingredients', prog.LIST)
-  .action(function(args, options, logger) {
-    logger.info("Command 'order' called with:");
-    logger.info("arguments: %j", args);
-    logger.info("options: %j", options);
+  .action(function(args, options) {
+    console.info("Command 'order' called with:");
+    console.info("arguments: %j", args);
+    console.info("options: %j", options);
   })
 
 
@@ -54,12 +54,12 @@ prog
     return Promise.resolve(["margherita", "hawaiian", "fredo"]);
   })
   .option('--say-something <something>', 'Say something to the manager')
-  .action(function(args, options, logger) {
+  .action(function(args, options) {
     return Promise.resolve("wooooo").then(function (ret) {
-      logger.info("Command 'return' called with:");
-      logger.info("arguments: %j", args);
-      logger.info("options: %j", options);
-      logger.info("promise succeed with: %s", ret);
+      console.info("Command 'return' called with:");
+      console.info("arguments: %j", args);
+      console.info("options: %j", options);
+      console.info("promise succeed with: %s", ret);
     });
   });
 

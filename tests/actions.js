@@ -2,7 +2,6 @@ import sinon from 'sinon';
 import should from 'should';
 
 import { Program } from '../lib/program.js';
-import { logger } from './utils/callback-logger.js';
 import { makeArgv } from './utils/make-argv.js';
 
 describe('Setting up no action()', () => {
@@ -12,7 +11,6 @@ describe('Setting up no action()', () => {
     const program = new Program();
 
     program
-      .logger(logger)
       .version('1.0.0')
       .command('foo', 'My foo');
 
@@ -39,7 +37,6 @@ describe('Setting up a sync action', () => {
     const action = sinon.spy();
 
     program
-      .logger(logger)
       .version('1.0.0')
       .command('foo', 'My foo')
       .action(action);
@@ -65,7 +62,6 @@ describe('Setting up a async action', () => {
     const stub = sinon.spy(action);
 
     program
-      .logger(logger)
       .version('1.0.0')
       .command('foo', 'My foo')
       .action(stub);
@@ -87,7 +83,6 @@ describe('Setting up a async action', () => {
     const fatalError = sinon.stub(program, "fatalError");
 
     program
-      .logger(logger)
       .version('1.0.0')
       .command('foo', 'My foo')
       .action(stub);
@@ -109,7 +104,6 @@ describe('Setting up a async action', () => {
     const fatalError = sinon.stub(program, "fatalError");
 
     program
-      .logger(logger)
       .version('1.0.0')
       .command('foo', 'My foo')
       .action(stub);

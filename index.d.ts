@@ -19,9 +19,6 @@ declare class Caporal {
     description(name: string): Caporal;
     description(): string;
 
-    logger(logger: Logger): Caporal;
-    logger(): Logger;
-
     bin(name: string): Caporal;
     bin(): string;
 
@@ -45,24 +42,11 @@ type helpOptions = {
 };
 
 type ActionCallback = (args: { [k: string]: any },
-                       options: { [k: string]: any },
-                       logger: Logger) => void;
+                       options: { [k: string]: any }
+                       ) => void;
 
 type ValidatorArg = string[]|string|RegExp|ValidatorFn|Number;
 type ValidatorFn = (str: string) => any;
-
-declare interface Logger {
-    debug(str: string|object): void;
-    debug(format: string, ...mixed: any[]): void;
-    info(str: string|object): void;
-    info(format: string, ...mixed: any[]): void;
-    log(str: string|object): void;
-    log(format: string, ...mixed: any[]): void;
-    warn(str: string|object): void;
-    warn(format: string, ...mixed: any[]): void;
-    error(str: string|object): void;
-    error(format: string, ...mixed: any[]): void;
-}
 
 declare interface Command {
     help(helpText: string, helpOptions?: helpOptions): Command;

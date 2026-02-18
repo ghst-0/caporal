@@ -14,7 +14,7 @@
 # Caporal
 
 > A full-featured framework for building command line applications (cli) with node.js,
-> including help generation, colored output, verbosity control, custom logger, coercion
+> including help generation, colored output, verbosity control, coercion
 > and casting, typos suggestions, and auto-complete for bash/zsh/fish.
 
 ## Install
@@ -47,7 +47,7 @@ prog
   // you specify options using .option()
   // if --tail is passed, its value is required
   .option('--tail <lines>', 'Tail <lines> lines of logs after deploy', prog.INT)
-  .action(function(args, options, logger) {
+  .action(function(args, options) {
     // args and options are objects
     // args = {"app": "myapp", "env": "production"}
     // options = {"tail" : 100}
@@ -72,7 +72,7 @@ prog
   // you specify options using .option()
   // if --tail is passed, its value is required
   .option('--tail <lines>', 'Tail <lines> lines of logs after deploy', prog.INT)
-  .action(function(args, options, logger) {
+  .action(function(args, options) {
     // args and options are objects
     // args = {"app": "myapp", "env": "production"}
     // options = {"tail" : 100}
@@ -100,7 +100,7 @@ prog
   .argument('<app>', 'App to deploy')
   .argument('<env>', 'Environment')
   .argument('[other-env...]', 'Other environments')
-  .action(function(args, options, logger) {
+  .action(function(args, options) {
     console.log(args);
     // {
     //   "app": "myapp",
@@ -124,8 +124,8 @@ const prog = require('caporal');
 prog
   .version('1.0.0')
   .description('A simple program that says "biiiip"')
-  .action(function(args, options, logger) {
-    logger.info("biiiip")
+  .action(function(args, options) {
+    console.info("biiiip")
   });
 
 prog.parse(process.argv);
@@ -144,9 +144,9 @@ prog
   .argument('<app>', 'App to deploy')
   .argument('<env>', 'Environment')
   .option('--how-much <amount>', 'How much app to deploy', prog.INT, 1)
-  .action(function(args, options, logger) {
-    logger.info(args);
-    logger.info(options);
+  .action(function(args, options) {
+    console.info(args);
+    console.info(options);
     // {
     //   "app": "myapp",
     //   "env": "production"
@@ -159,58 +159,6 @@ prog.exec(['deploy', 'myapp', 'env'], {
   howMuch: 2
 });
 ```
-
-## Logging
-
-Inside your action(), use the logger argument (third one) to log informations.
-
-```javascript
-#!/usr/bin/env node
-const prog = require('caporal');
-prog
-  .version('1.0.0')
-  .command('deploy', 'The deploy command')
-  .action((args, options, logger) => {
-    // Available methods:
-    // - logger.debug('message')
-    // - logger.info('message') or logger.log('level', 'message')
-    // - logger.warn('message')
-    // - logger.error('message')
-    logger.info("Application deployed !");
-  });
-
-prog.parse(process.argv);
-```
-
-### Logging levels
-
-The default logging level is 'info'. The predefined options can be used to change the logging level:
-
-* `-v, --verbose`: Set the logging level to 'debug' so debug() logs will be output.
-* `--quiet, --silent`: Set the logging level to 'warn' so only warn() and error() logs will be output.
-
-### Custom logger
-
-Caporal uses `winston` for logging. You can provide your own winston-compatible logger using `.logger()` the following way:
-
-```javascript
-#!/usr/bin/env node
-const prog = require('caporal');
-const myLogger = require('/path/to/my/logger.js');
-prog
-  .version('1.0.0')
-  .logger(myLogger)
-  .command('foo', 'Foo command description')
-  .action((args, options, logger) => {
-    logger.info("Foo !!");
-  });
-
-prog.parse(process.argv);
-```
-
-* `-v, --verbose`: Set the logging level to 'debug' so debug() logs will be output.
-* `--quiet, --silent`: Set the logging level to 'warn' so only warn() and error() logs will be output.
-
 
 ## Coercion and casting using validators
 
@@ -493,10 +441,10 @@ prog
 
   // -e | --extra will be auto-magicaly autocompleted by providing the user with 3 choices
   .option('-e, --extra <ingredients>', 'Add extra ingredients', ['pepperoni', 'onion', 'cheese'])
-  .action(function(args, options, logger) {
-    logger.info("Command 'order' called with:");
-    logger.info("arguments: %j", args);
-    logger.info("options: %j", options);
+  .action(function(args, options) {
+    console.info("Command 'order' called with:");
+    console.info("arguments: %j", args);
+    console.info("options: %j", options);
   })
 
   // the "return" command
@@ -513,10 +461,10 @@ prog
     return Promise.resolve(["margherita", "hawaiian", "fredo"]);
   })
   .option('--say-something <something>', 'Say something to the manager')
-  .action(function(args, options, logger) {
-    logger.info("Command 'return' called with:");
-    logger.info("arguments: %j", args);
-    logger.info("options: %j", options);
+  .action(function(args, options) {
+    console.info("Command 'return' called with:");
+    console.info("arguments: %j", args);
+    console.info("options: %j", options);
   });
 
 prog.parse(process.argv);
@@ -573,23 +521,18 @@ prog
   .version('1.0.0')
   // one command
   .command('walk', 'Make the player walk')
-  .action((args, options, logger) => { logger.log("I'm walking !")}) // you must attach an action for your command
+  .action((args, options) => { console.log("I'm walking !")}) // you must attach an action for your command
   // a second command
   .command('run', 'Make the player run')
-  .action((args, options, logger) => { logger.log("I'm running !")})
+  .action((args, options) => { console.log("I'm running !")})
   // a command may have multiple words
   .command('cook pizza', 'Make the player cook a pizza')
   .argument('<kind>', 'Kind of pizza')
-  .action((args, options, logger) => { logger.log("I'm cooking a pizza !")})
+  .action((args, options) => { console.log("I'm cooking a pizza !")})
 // [...]
 
 prog.parse(process.argv);
 ```
-
-#### `.logger([logger]) -> Program | winston`
-
-Get or set the logger instance. Without argument, it returns the logger instance (*winston* by default).
-With the *logger* argument, it sets a new logger.
 
 ### Command API
 
@@ -632,7 +575,6 @@ Define the action, e.g a *Function*, for the current command.
 The *action* callback will be called with 3 arguments:
 * *args* (Object): Passed arguments
 * *options* (Object): Passed options
-* *logger* (winston): Winston logger instance
 
 ```javascript
 // sync action
@@ -640,8 +582,8 @@ const prog = require('caporal');
 prog
   .version('1.0.0')
   .command('walk', 'Make the player walk')
-  .action((args, options, logger) => {
-    logger.log("I'm walking !")
+  .action((args, options) => {
+    console.log("I'm walking !")
   });
 ```
 
@@ -653,7 +595,7 @@ const prog = require('caporal');
 prog
   .version('1.0.0')
   .command('walk', 'Make the player walk')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(/* ... */);
   });
 ```
@@ -669,7 +611,7 @@ prog
   // one command
   .command('walk', 'Make the player walk')
   .alias('w')
-  .action((args, options, logger) => { logger.log("I'm walking !")});
+  .action((args, options) => { console.log("I'm walking !")});
 
 prog.parse(process.argv);
 
@@ -709,7 +651,6 @@ Caporal makes use of the following npm packages:
 * [tabtab](https://www.npmjs.com/package/tabtab) for auto-completion
 * [minimist](https://www.npmjs.com/package/minimist) for argument parsing
 * [prettyjson](https://www.npmjs.com/package/prettyjson) to output json
-* [winston](https://www.npmjs.com/package/winston) for logging
 
 
 ## License
