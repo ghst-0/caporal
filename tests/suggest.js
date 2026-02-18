@@ -1,5 +1,5 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -22,13 +22,13 @@ describe('Passing --foo', () => {
       .action(function() {});
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('UnknownOptionError');
-      should(stripColor(err.originalMessage)).containEql('foor');
-      should(stripColor(err.originalMessage)).containEql('afoo');
-      should(stripColor(err.originalMessage)).containEql('footx');
+      equal(err.name, 'UnknownOptionError');
+      equal(stripColor(err.originalMessage).includes('foor'), true);
+      equal(stripColor(err.originalMessage).includes('afoo'), true);
+      equal(stripColor(err.originalMessage).includes('footx'), true);
     });
     program.parse(makeArgv('--foo'));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });

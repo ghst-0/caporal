@@ -1,8 +1,9 @@
+import { deepEqual, equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
+
 const program = new Program();
 
 program
@@ -13,7 +14,7 @@ describe('Setting up an invalid validator flag', () => {
   it(`should throw ValidationError`, () => {
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('ValidationError');
+      equal(err.name, 'ValidationError');
     });
 
     program
@@ -22,7 +23,7 @@ describe('Setting up an invalid validator flag', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -33,7 +34,7 @@ describe('Setting up an invalid validator (boolean)', () => {
   it(`should throw ValidationError`, () => {
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('ValidationError');
+      equal(err.name, 'ValidationError');
     });
 
     program
@@ -42,7 +43,7 @@ describe('Setting up an invalid validator (boolean)', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -58,7 +59,7 @@ describe('Setting up an option without validator', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(program.getCommands()[0]._options[0].getChoices()).be.eql([]);
+    deepEqual(program.getCommands()[0]._options[0].getChoices(), []);
     program.reset();
   });
 });
@@ -73,7 +74,7 @@ describe('Setting up an option with an non-Array validator', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(program.getCommands()[0]._options[0]._validator.getChoices()).be.eql([]);
+    deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
     program.reset();
   });
 });
@@ -88,7 +89,7 @@ describe('Setting up an option with a function validator', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(program.getCommands()[0]._options[0]._validator.getChoices()).be.eql([]);
+    deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
     program.reset();
   })
 })
@@ -103,7 +104,7 @@ describe('Setting up an option with a promise validator', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    should(program.getCommands()[0]._options[0]._validator.getChoices()).be.eql([]);
+    deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
     program.reset();
   })
 })

@@ -1,5 +1,5 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -15,14 +15,14 @@ describe('Setting up no action()', () => {
       .command('foo', 'My foo');
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('NoActionError');
+      equal(err.name, 'NoActionError');
     });
 
     program.parse(makeArgv('foo'));
 
     const count = error.callCount;
     error.restore();
-    should(count).be.eql(1);
+    equal(count, 1);
     program.reset();
   });
 
@@ -43,7 +43,7 @@ describe('Setting up a sync action', () => {
 
     program.parse(makeArgv('foo'));
 
-    should(action.callCount).be.eql(1);
+    equal(action.callCount, 1);
 
     program.reset();
   });
@@ -68,7 +68,7 @@ describe('Setting up a async action', () => {
 
     program.parse(makeArgv('foo'));
 
-    should(stub.callCount).be.eql(1);
+    equal(stub.callCount, 1);
     program.reset();
 
   });
@@ -88,8 +88,8 @@ describe('Setting up a async action', () => {
       .action(stub);
 
     program.parse(makeArgv('foo')).then(() => {}).catch(() => {}).then(() => {
-      should(stub.callCount).be.eql(1);
-      should(fatalError.callCount).be.eql(1);
+      equal(stub.callCount, 1);
+      equal(fatalError.callCount, 1);
       done()
     })
 
@@ -109,8 +109,8 @@ describe('Setting up a async action', () => {
       .action(stub);
 
     program.parse(makeArgv('foo')).then(() => {}).catch(() => {}).then(() => {
-      should(stub.callCount).be.eql(1);
-      should(fatalError.callCount).be.eql(1);
+      equal(stub.callCount, 1);
+      equal(fatalError.callCount, 1);
       done()
     });
 

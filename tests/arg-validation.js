@@ -1,5 +1,5 @@
+import { equal, deepEqual } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -30,8 +30,8 @@ describe("Argument validation", function() {
 
   it(`should throw InvalidArgumentValueError for an invalid required argument value (Regex validator)`, function() {
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
   });
 
   it(`should throw InvalidArgumentValueError for an invalid optional argument value (Regex validator)`, function() {
@@ -41,8 +41,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
   });
 
   it(`should throw InvalidArgumentValueError for an invalid optional argument value (Array validator)`, function() {
@@ -52,8 +52,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
   });
 
 
@@ -64,8 +64,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
   });
 
   it(`should not throw InvalidArgumentValueError for an valid required argument value (Array validator)`, function() {
@@ -75,7 +75,7 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', 'bam']));
-    should(this.fatalError.callCount).eql(0);
+    equal(this.fatalError.callCount, 0);
   });
 
   it(`should throw InvalidArgumentValueError for an invalid required argument value (Function validator)`, function() {
@@ -91,8 +91,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
   });
 
   it(`should not throw InvalidArgumentValueError for a valid required argument value (Function validator)`, function() {
@@ -108,7 +108,7 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', 'bam']));
-    should(this.fatalError.callCount).eql(0);
+    equal(this.fatalError.callCount, 0);
   });
 
   it(`should throw InvalidArgumentValueError for an invalid required argument value (Promise validator)`, function(done) {
@@ -128,8 +128,8 @@ describe("Argument validation", function() {
 
     program.parse(makeArgv(['foo', '827E92']))
       .catch(e => {
-        should(this.fatalError.callCount).eql(1);
-        should(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError))).be.ok();
+        equal(this.fatalError.callCount, 1);
+        equal(this.fatalError.calledWith(sinon.match.instanceOf(InvalidArgumentValueError)), true);
         done()
       });
   });
@@ -150,7 +150,7 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', 'bam'])).then(arg => {
-      should(this.fatalError.callCount).eql(0);
+      equal(this.fatalError.callCount, 0);
       done();
     })
   });
@@ -162,9 +162,9 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo']));
-    should(this.action.callCount).eql(1);
-    should(this.action.calledWith({foo:"bar"}));
-    should(this.fatalError.callCount).eql(0);
+    equal(this.action.callCount, 1);
+    equal(this.action.calledWith({foo:"bar"}), true);
+    equal(this.fatalError.callCount, 0);
   });
 
   it(`should throw WrongNumberOfArgumentError when passing an unknown argument for a command that does not accept arguments`, function() {
@@ -173,8 +173,9 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E92']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError))).be.ok();
+    // TODO: mocking
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError)), true);
   });
 
   it(`should throw WrongNumberOfArgumentError for a known command when forgetting an argument`, function() {
@@ -186,8 +187,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError)), true);
   });
 
   it(`should throw WrongNumberOfArgumentError for a default command when forgetting an argument`, function() {
@@ -197,8 +198,8 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo']));
-    should(this.fatalError.callCount).eql(1);
-    should(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError))).be.ok();
+    equal(this.fatalError.callCount, 1);
+    equal(this.fatalError.calledWith(sinon.match.instanceOf(WrongNumberOfArgumentError)), true);
   });
 
   it(`should not throw any error when passing an argument without validator`, function() {
@@ -208,7 +209,7 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', '827E-Z92']));
-    should(this.fatalError.callCount).eql(0);
+    equal(this.fatalError.callCount, 0);
   });
 
   it(`should return an array for variadic arguments without validator`, function() {
@@ -219,8 +220,9 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo', 'bar', 'im', 'a', 'variadic', 'arg']));
-    should(this.fatalError.callCount).eql(0);
-    should(this.action.calledWith({foo: "bar", otherFoo: ['im', 'a', 'variadic', 'arg']}))
+    // TODO: mocking
+    equal(this.fatalError.callCount, 0);
+    equal(this.action.calledWith({foo: "bar", otherFoo: ['im', 'a', 'variadic', 'arg']}), true)
   });
 
   it(`should handled optional arguments with no default and no validator`, function() {
@@ -230,7 +232,7 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['foo']));
-    should(this.action.callCount).eql(1);
+    equal(this.action.callCount, 1);
   });
 
   it(`should hanldle negative numbers in quoted arguments`, function() {
@@ -241,14 +243,14 @@ describe("Argument validation", function() {
       .action(this.action);
 
     program.parse(makeArgv(['order', "pizza", '-1']));
-    should(this.fatalError.callCount).eql(0);
-    should(this.action.callCount).eql(1);
-    should(this.action.args[0][0]).eql({ what: 'pizza', howMuch: -1 });
+    equal(this.fatalError.callCount, 0);
+    equal(this.action.callCount, 1);
+    deepEqual(this.action.args[0][0], { what: 'pizza', howMuch: -1 });
   });
 
   it(`should not throw any error when passing an handled argument to completion`, function() {
     program.parse(makeArgv(['completion', 'zsh']));
-    should(this.fatalError.callCount).eql(0);
+    equal(this.fatalError.callCount, 0);
   });
 
 });

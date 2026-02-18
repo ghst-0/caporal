@@ -1,14 +1,13 @@
+import { deepEqual, equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
+
 const program = new Program();
 
 program
   .version('1.0.0');
-
-
 
 describe('Passing --option invalid-value', () => {
   let error;
@@ -16,7 +15,7 @@ describe('Passing --option invalid-value', () => {
   beforeEach(() => {
     program.action(function() {});
     error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('InvalidOptionValueError');
+      equal(err.name, 'InvalidOptionValueError');
     });
   });
 
@@ -78,7 +77,7 @@ describe('Passing --option invalid-value', () => {
 
       const count = error.callCount;
 
-      should(count).be.eql(1);
+      equal(count, 1);
     });
   });
 
@@ -100,7 +99,7 @@ describe('Passing --option invalid-value', () => {
     program.parse(makeArgv(['-t', 'i-am-invalid'])).then(() => {}).catch(() => {}).then(() => {
       const count = error.callCount;
 
-      should(count).be.eql(1);
+      equal(count, 1);
       done();
     })
   });
@@ -124,14 +123,14 @@ describe('Passing --option valid-value', () => {
     it(`should succeed for ${checkType} check`, () => {
       if (checkType === 'regex') {
         program.action(function (args, options) {
-          should(options.time).eql('234');
+          equal(options.time, '234');
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', /^\d+$/);
         program.parse(makeArgv(['-t', '234']));
 
       } else if (checkType === 'function') {
         program.action(function (args, options) {
-          should(options.time).eql(2);
+          equal(options.time, 2);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function (val) {
           const o = Number.parseInt(val);
@@ -144,56 +143,56 @@ describe('Passing --option valid-value', () => {
 
       } else if (checkType === 'STRING') {
         program.action(function (args, options) {
-          should(options.file).eql('foo')
+          equal(options.file, 'foo')
         });
         program.option('-f, --file <file>', 'File', program.STRING);
         program.parse(makeArgv(['-f', 'foo']));
 
       } else if (checkType === 'INT') {
         program.action(function (args, options) {
-          should(options.time).eql(282);
+          equal(options.time, 282);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', program.INT);
         program.parse(makeArgv(['-t', '282']));
 
       } else if (checkType === 'BOOL') {
         program.action(function (args, options) {
-          should(options.happy).eql(true);
+          equal(options.happy, true);
         });
         program.option('--happy <value>', 'Am I happy ?', program.BOOLEAN);
         program.parse(makeArgv(['--happy', 'yes']));
 
       } else if (checkType === 'BOOL(implicit)') {
         program.action(function (args, options) {
-          should(options.happy).eql(true);
+          equal(options.happy, true);
         });
         program.option('--happy', 'Am I happy ?', program.BOOLEAN);
         program.parse(makeArgv(['--happy']));
 
       } else if (checkType === 'FLOAT') {
         program.action(function (args, options) {
-          should(options.time).eql(2.8);
+          equal(options.time, 2.8);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', program.FLOAT);
         program.parse(makeArgv(['-t', '2.8']));
 
       } else if (checkType === 'LIST(int)') {
         program.action(function (args, options) {
-          should(options.list).eql([1, 8]);
+          deepEqual(options.list, [1, 8]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.INT);
         program.parse(makeArgv(['--list', '1,8']));
 
       } else if (checkType === 'LIST(bool)') {
         program.action(function (args, options) {
-          should(options.list).eql([true, false, true, false, true, false]);
+          deepEqual(options.list, [true, false, true, false, true, false]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.BOOL);
         program.parse(makeArgv(['--list', 'true,0,yes,no,1,false']));
 
       } else if (checkType === 'LIST(float)') {
         program.action(function (args, options) {
-          should(options.list).eql([1.0, 0]);
+          deepEqual(options.list, [1.0, 0]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.FLOAT);
         program.parse(makeArgv(['--list', '1.0,0']));
@@ -201,7 +200,7 @@ describe('Passing --option valid-value', () => {
 
       const count = error.callCount;
 
-      should(count).be.eql(0);
+      equal(count, 0);
     });
   });
 
@@ -224,8 +223,8 @@ describe('Passing --option valid-value', () => {
     program.parse(makeArgv(['-t', '2'])).then(() => { }).catch(() => { }).then(() => {
       const count = error.callCount;
       try {
-        should(count).be.eql(0);
-        should(time).be.eql(2);
+        equal(count, 0);
+        equal(time, 2);
         done();
       } catch (e) {
         done(e);
@@ -243,10 +242,10 @@ describe('Passing --unknown-option (long)', () => {
       .action(function() {});
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('UnknownOptionError');
+      equal(err.name, 'UnknownOptionError');
     });
     program.parse(makeArgv('--unknown-option'));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -260,12 +259,12 @@ describe('Setting up an option with a default value', () => {
       .command('foo', 'Fooooo')
       .option('--foo <foo-value>', 'My bar', /^[a-z]+$/, 'bar')
       .action(function(args, options){
-        should(options.foo).eql('bar');
+        equal(options.foo, 'bar');
       });
 
     const error = sinon.stub(program, "fatalError");
     program.parse(makeArgv(['foo']));
-    should(error.callCount).eql(0);
+    equal(error.callCount, 0);
     program.reset();
     error.restore();
   });
@@ -279,12 +278,12 @@ describe('Setting up an option with an optional value', () => {
       .command('foo', 'Fooooo')
       .option('--with-openssl [path]', 'Compile with openssl')
       .action(function(args, options){
-        should(options.withOpenssl).eql(true);
+        equal(options.withOpenssl, true);
       });
 
     const error = sinon.stub(program, "fatalError");
     program.parse(makeArgv(['foo', '--with-openssl']));
-    should(error.callCount).eql(0);
+    equal(error.callCount, 0);
     program.reset();
     error.restore();
   });
@@ -301,10 +300,10 @@ describe('Passing an unknown short option', () => {
       .action(function() {});
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('UnknownOptionError');
+      equal(err.name, 'UnknownOptionError');
     });
     program.parse(makeArgv('-u'));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -320,7 +319,7 @@ describe('Passing a known short option', () => {
 
     const error = sinon.stub(program, "fatalError");
     program.parse(makeArgv(['-t', '278']));
-    should(error.callCount).be.eql(0);
+    equal(error.callCount, 0);
     error.restore();
     program.reset();
   });
@@ -335,10 +334,10 @@ describe('Setting up a required option (long)', () => {
       .action(function() {});
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('MissingOptionError');
+      equal(err.name, 'MissingOptionError');
     });
     program.parse(makeArgv('foo'));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -353,10 +352,10 @@ describe('Setting up a required option (short)', () => {
       .action(function() {});
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('MissingOptionError');
+      equal(err.name, 'MissingOptionError');
     });
     program.parse(makeArgv('foo'));
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });
@@ -373,8 +372,8 @@ describe('Setting up a just one short option', () => {
       .action(action);
 
     program.parse(makeArgv(['foo', '-t', '2']));
-    should(action.called).be.ok();
-    should(action.args[0][1]).eql({t:'2'});
+    equal(action.called, true);
+    deepEqual(action.args[0][1], {t:'2'});
     program.reset();
   });
 });
@@ -385,7 +384,7 @@ describe('Setting up a option synopsis containing an error', () => {
   it(`should throw OptionSyntaxError`, () => {
 
     const error = sinon.stub(program, "fatalError", function(err) {
-      should(err.name).eql('OptionSyntaxError');
+      equal(err.name, 'OptionSyntaxError');
     });
 
     program
@@ -393,7 +392,7 @@ describe('Setting up a option synopsis containing an error', () => {
       .option('-t <time-in-secs> foo', 'my option', null, null, true)
       .action(function() {});
 
-    should(error.callCount).be.eql(1);
+    equal(error.callCount, 1);
     error.restore();
     program.reset();
   });

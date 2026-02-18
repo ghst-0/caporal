@@ -1,8 +1,9 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
+
 describe('Chaining 2 commands', () => {
 
   const program = new Program();
@@ -16,16 +17,13 @@ describe('Chaining 2 commands', () => {
 
   it(`should generate 2 commands`, () => {
     program.parse(makeArgv(['foo']));
-    should(program._commands.length).eql(2);
+    equal(program._commands.length, 2);
   });
-
-
 });
 
 describe('Aliasing a command', () => {
 
   const program = new Program();
-
   const action = sinon.stub();
 
   program
@@ -36,10 +34,6 @@ describe('Aliasing a command', () => {
 
   it(`should allow calling it with alias`, () => {
     program.parse(makeArgv(['f']));
-    should(action.callCount).be.eql(1);
+    equal(action.callCount, 1);
   });
-
-
 });
-
-

@@ -1,5 +1,5 @@
+import { equal, throws } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -21,8 +21,8 @@ describe("program.fatalError()", () => {
 
     program.fatalError(new Error("foo"));
 
-    should(error.callCount).eql(1);
-    should(exit.callCount).eql(1);
+    equal(error.callCount, 1);
+    equal(exit.callCount, 1);
   });
 
   it(`should call console.error() and exit(2) - verbose`, () => {
@@ -33,10 +33,11 @@ describe("program.fatalError()", () => {
       .command('foo', 'Fooooo')
       .action(() => { throw new Error('foo'); });
 
-    should(program.parse.bind(program, makeArgv(['foo', '-v']))).throw();
+    throws(program.parse.bind(program, makeArgv(['foo', '-v'])))
 
-    should(error.callCount).eql(1);
-    should(exit.callCount).eql(1);
+    // TODO: Mocking
+    equal(error.callCount, 1);
+    equal(exit.callCount, 1);
   });
 
   it(`should call console.error() and exit(2) - normal`, () => {
@@ -47,10 +48,10 @@ describe("program.fatalError()", () => {
       .command('foo', 'Fooooo')
       .action(() => { throw new Error('foo'); });
 
-    should(program.parse.bind(program, makeArgv(['foo']))).throw();
+    throws(program.parse.bind(program, makeArgv(['foo'])));
 
-    should(error.callCount).eql(1);
-    should(exit.callCount).eql(1);
+    equal(error.callCount, 1);
+    equal(exit.callCount, 1);
   });
 
   it(`should call console.error() and exit(2) - async`, (done) => {
@@ -66,8 +67,8 @@ describe("program.fatalError()", () => {
       });
 
     program.parse(makeArgv(['foo'])).catch(() => {
-      should(error.callCount).eql(1);
-      should(exit.callCount).eql(1);
+      equal(error.callCount, 1);
+      equal(exit.callCount, 1);
       done();
     });
   });
@@ -80,10 +81,10 @@ describe("program.fatalError()", () => {
       .command('foo', 'Fooooo')
       .action(() => { throw 'foo'; });
 
-    should(program.parse.bind(program, makeArgv(['foo']))).throw();
+    throws(program.parse.bind(program, makeArgv(['foo'])));
 
-    should(error.callCount).eql(1);
-    should(exit.callCount).eql(1);
+    equal(error.callCount, 1);
+    equal(exit.callCount, 1);
   });
 
   it(`should call console.error() and exit(2) - throw non-exception async`, (done) => {
@@ -99,8 +100,8 @@ describe("program.fatalError()", () => {
       });
 
     program.parse(makeArgv(['foo'])).catch(() => {
-      should(error.callCount).eql(1);
-      should(exit.callCount).eql(1);
+      equal(error.callCount, 1);
+      equal(exit.callCount, 1);
       done();
     });
   });
@@ -109,8 +110,4 @@ describe("program.fatalError()", () => {
     console.error.restore();
     process.exit.restore();
   })
-
-
 });
-
-

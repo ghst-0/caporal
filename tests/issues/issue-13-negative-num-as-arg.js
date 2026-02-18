@@ -1,5 +1,5 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../../lib/program.js';
 import { makeArgv } from '../utils/make-argv.js';
@@ -29,7 +29,7 @@ describe("Issue #13 - Enter negative number as Argument", function() {
 
   it(`should not throw WrongNumberOfArgumentError with negative number as argument`, function() {
     this.program.parse(makeArgv(['solve', '1', '2', '-3']));
-    should(this.fatalError.callCount).eql(0);
-    should(this.action.callCount).eql(1);
+    equal(this.fatalError.callCount, 0);
+    equal(this.action.callCount, 1);
   });
 });

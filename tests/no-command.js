@@ -1,9 +1,8 @@
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
-
+import { equal } from 'node:assert/strict'
 
 describe('Setting up no command() but an action()', () => {
 
@@ -16,7 +15,7 @@ describe('Setting up no command() but an action()', () => {
     const action = sinon.stub();
     program.action(action);
     program.parse([]);
-    should(action.callCount).eql(1);
+    equal(action.callCount, 1);
   });
 });
 
@@ -32,8 +31,6 @@ describe('Setting up no command() but an argument() and an action()', () => {
     const action = sinon.stub();
     program.action(action);
     program.parse(makeArgv(['myarg']));
-    should(action.callCount).eql(1);
+    equal(action.callCount, 1);
   });
 });
-
-

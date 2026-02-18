@@ -1,5 +1,5 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../../lib/program.js';
 import { makeArgv } from '../utils/make-argv.js';
@@ -25,23 +25,23 @@ describe('Issue #107 - Implicit boolean option', () => {
 
     it(`should call the action with {a: 1} and {bool: true}`, () => {
       this.program.parse(makeArgv(['cmd', '-b', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {bool: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {bool: true}), true);
     });
 
     it(`should call the action with {} and {bool: true}`, () => {
       this.program.parse(makeArgv(['cmd', '-b']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({}, {bool: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({}, {bool: true}), true);
     });
 
     it(`should call the action with {a: 1} and {bool: false}`, () => {
       this.program.parse(makeArgv(['cmd', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {bool: false}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {bool: false}), true);
     });
   });
 
@@ -65,23 +65,23 @@ describe('Issue #107 - Implicit boolean option', () => {
 
     it(`should call the action with {a: 1} and {bool: true}`, () => {
       this.program.parse(makeArgv(['cmd', '--bool', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {bool: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {bool: true}), true);
     });
 
     it(`should call the action with {} and {bool: true}`, () => {
       this.program.parse(makeArgv(['cmd', '--bool']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({}, {bool: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({}, {bool: true}), true);
     });
 
     it(`should call the action with {a: 1} and {bool: false}`, () => {
       this.program.parse(makeArgv(['cmd', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {bool: false}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {bool: false}), true);
     });
   });
 
@@ -105,23 +105,23 @@ describe('Issue #107 - Implicit boolean option', () => {
 
     it(`should call the action with {a: 1} and {b: true}`, () => {
       this.program.parse(makeArgv(['cmd', '-b', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {b: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {b: true}), true);
     });
 
     it(`should call the action with {} and {b: true}`, () => {
       this.program.parse(makeArgv(['cmd', '-b']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({}, {b: true}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({}, {b: true}), true);
     });
 
     it(`should call the action with {a: 1} and {b: false}`, () => {
       this.program.parse(makeArgv(['cmd', '1']));
-      should(this.fatalError.callCount).eql(0);
-      should(this.action.callCount).eql(1);
-      should(this.action.calledWith({a: 1}, {b: false}));
+      equal(this.fatalError.callCount, 0);
+      equal(this.action.callCount, 1);
+      equal(this.action.calledWith({a: 1}, {b: false}), true);
     });
   });
 });

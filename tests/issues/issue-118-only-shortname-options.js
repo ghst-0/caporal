@@ -1,5 +1,5 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 import * as c from 'colorette';
 
 import { Program } from '../../lib/program.js';
@@ -15,8 +15,8 @@ describe('Issue #118 - Unknown option --undefined', () => {
   it('should return shortname in error text whenever longname is not provided', () => {
 
     sinon.stub(program, 'fatalError', (err) => {
-      should(err.name).eql('MissingOptionError');
-      should(err.originalMessage).equal(`Missing option ${c.italic('-z')}.`);
+      equal(err.name, 'MissingOptionError');
+      equal(err.originalMessage, `Missing option ${c.italic('-z')}.`);
     });
     program.option('-z <whatever>', 'Random option', program.INT, null, true);
     program.parse(makeArgv([]));

@@ -1,12 +1,10 @@
-import should from 'should';
+import { equal } from 'node:assert/strict';
 
+import caporal from '../index.js';
 import { Program } from '../lib/program.js';
 
 describe("import('caporal')", () => {
   it(`should return {new Program()}`, () => {
-    const caporal = import('../index.js');
-    should(caporal).be.instanceOf(Program);
+    equal(caporal instanceof Program, true);
   });
 });
-
-

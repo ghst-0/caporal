@@ -5,7 +5,7 @@
   "types": "index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "mocha --full-trace --recursive -R mocha-unfunk-reporter tests/"
+    "test": "mocha --full-trace --recursive tests/"
   },
   "engines": {
     "node": ">= 8"
@@ -28,9 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "^11.7.5",
-    "mocha-unfunk-reporter": "^0.4.0",
     "oxlint": "^1.48.0",
-    "should": "^13.2.3",
     "sinon": "^1.17.7"
   },
   "dependencies": {

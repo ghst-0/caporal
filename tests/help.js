@@ -1,8 +1,9 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
+
 const program = new Program();
 
 program
@@ -21,8 +22,8 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv('help'));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -46,8 +47,8 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv('help'));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -73,8 +74,8 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     exit.restore();
     help.restore();
     program.reset();
@@ -94,8 +95,8 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -114,9 +115,9 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv('help'));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();
@@ -137,9 +138,9 @@ describe('Calling {program} help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();
@@ -162,8 +163,8 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -187,8 +188,8 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -214,8 +215,8 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     exit.restore();
     help.restore();
     program.reset();
@@ -235,8 +236,8 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -255,9 +256,9 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();
@@ -278,9 +279,9 @@ describe('Calling {program} --help', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['--help', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();
@@ -304,8 +305,8 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -329,8 +330,8 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -356,8 +357,8 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     exit.restore();
     help.restore();
     program.reset();
@@ -377,8 +378,8 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
     help.restore();
     exit.restore();
     program.reset();
@@ -397,9 +398,9 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();
@@ -420,9 +421,9 @@ describe('Calling {program} -h', function() {
     const help = sinon.spy(program, "_help");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv(['-h', 'command1']));
-    should(help.callCount).be.eql(1);
-    should(exit.callCount).be.eql(1);
-    should(program._help()).containEql(customHelp);
+    equal(help.callCount, 1);
+    equal(exit.callCount, 1);
+    equal(program._help().includes(customHelp), true);
     help.restore();
     exit.restore();
     program.reset();

@@ -1,3 +1,4 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
@@ -22,8 +23,7 @@ describe('Execute command', () => {
       'fooOption': 11,
     });
 
-    should(actionFoo.callCount).be.eql(1);
-    should(actionBar.callCount).be.eql(0);
+    equal(actionFoo.callCount, 1);
+    equal(actionBar.callCount, 0);
   });
-
 });

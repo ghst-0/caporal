@@ -1,8 +1,9 @@
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
-import should from 'should';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
+
 const program = new Program();
 
 program
@@ -14,8 +15,8 @@ describe('Predefined options', function() {
     const version = sinon.stub(program, "version");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv('-V'));
-    should(version.called).be.true();
-    should(exit.callCount).eql(1);
+    equal(version.called, true);
+    equal(exit.callCount, 1);
     exit.restore();
     version.restore();
   });
@@ -24,8 +25,8 @@ describe('Predefined options', function() {
     const version = sinon.stub(program, "version");
     const exit = sinon.stub(process, "exit");
     program.parse(makeArgv('--version'));
-    should(version.called).be.true();
-    should(exit.callCount).eql(1);
+    equal(version.called, true);
+    equal(exit.callCount, 1);
     exit.restore();
     version.restore();
   });
@@ -38,8 +39,8 @@ describe('Predefined options', function() {
     const exit = sinon.stub(process, "exit");
     const help = sinon.spy(program, "_help");
     program.parse(makeArgv(['foo', '-h']));
-    should(help.called).be.ok();
-    should(exit.callCount).eql(1);
+    equal(help.called, true);
+    equal(exit.callCount, 1);
     exit.restore();
     help.restore();
   });
@@ -53,11 +54,9 @@ describe('Predefined options', function() {
     const exit = sinon.stub(process, "exit");
     const help = sinon.spy(program, "_help");
     program.parse(makeArgv(['foo', '-h']));
-    should(help.called).be.ok();
-    should(exit.callCount).eql(1);
+    equal(help.called, true);
+    equal(exit.callCount, 1);
     exit.restore();
     help.restore();
-
   });
-
 });
