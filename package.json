@@ -5,7 +5,7 @@
   "types": "index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "mocha --full-trace --recursive tests/"
+    "test": "node --experimental-test-coverage --test tests/*.js tests/issues/*.js"
   },
   "engines": {
     "node": ">= 8"
@@ -27,7 +27,6 @@
   "repository": "mattallty/Caporal.js",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^11.7.5",
     "oxlint": "^1.48.0",
     "sinon": "^1.17.7"
   },

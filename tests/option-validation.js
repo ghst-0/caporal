@@ -1,3 +1,4 @@
+import { describe, beforeEach, afterEach, it } from 'node:test';
 import { deepEqual, equal } from 'node:assert/strict';
 import sinon from 'sinon';
 

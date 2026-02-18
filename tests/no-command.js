@@ -1,8 +1,9 @@
+import { describe, it } from 'node:test';
+import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
-import { equal } from 'node:assert/strict'
 
 describe('Setting up no command() but an action()', () => {
 

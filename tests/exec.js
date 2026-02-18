@@ -1,3 +1,4 @@
+import { describe, it } from 'node:test';
 import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
 

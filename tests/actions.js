@@ -1,3 +1,4 @@
+import { describe, it } from 'node:test';
 import { equal } from 'node:assert/strict';
 import sinon from 'sinon';
 
@@ -92,8 +93,8 @@ describe('Setting up a async action', () => {
       equal(fatalError.callCount, 1);
       done()
     })
-
   });
+
   it(`should fatalError() for a rejected promise (error object)`, (done) => {
 
     const program = new Program();
@@ -113,7 +114,6 @@ describe('Setting up a async action', () => {
       equal(fatalError.callCount, 1);
       done()
     });
-
   });
 
 });
