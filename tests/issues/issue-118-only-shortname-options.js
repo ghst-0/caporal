@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 import * as c from 'colorette';
 
 import { Program } from '../../lib/program.js';
@@ -15,10 +14,11 @@ program
 describe('Issue #118 - Unknown option --undefined', () => {
   it('should return shortname in error text whenever longname is not provided', () => {
 
-    sinon.stub(program, 'fatalError', (err) => {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'MissingOptionError');
       equal(err.originalMessage, `Missing option ${c.italic('-z')}.`);
-    });
+    })
+
     program.option('-z <whatever>', 'Random option', program.INT, null, true);
     program.parse(makeArgv([]));
 

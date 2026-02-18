@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { deepEqual, equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -14,18 +13,18 @@ describe('Setting up an invalid validator flag', () => {
 
   it(`should throw ValidationError`, () => {
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'ValidationError');
     });
 
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', 256)
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -34,7 +33,7 @@ describe('Setting up an invalid validator (boolean)', () => {
 
   it(`should throw ValidationError`, () => {
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'ValidationError');
     });
 
@@ -44,8 +43,8 @@ describe('Setting up an invalid validator (boolean)', () => {
       .action(function() {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });

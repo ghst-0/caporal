@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -8,21 +7,17 @@ import { makeArgv } from './utils/make-argv.js';
 describe('Setting up no action()', () => {
 
   it(`should throw NoActionError`, () => {
-
     const program = new Program();
-
     program
       .version('1.0.0')
       .command('foo', 'My foo');
-
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'NoActionError');
     });
-
     program.parse(makeArgv('foo'));
 
-    const count = error.callCount;
-    error.restore();
+    const count = program.fatalError.mock.callCount();
+    program.fatalError.mock.restore();
     equal(count, 1);
     program.reset();
   });
@@ -33,9 +28,8 @@ describe('Setting up no action()', () => {
 describe('Setting up a sync action', () => {
 
   it(`should call this action`, () => {
-
     const program = new Program();
-    const action = sinon.spy();
+    const action = mock.fn();
 
     program
       .version('1.0.0')
@@ -44,76 +38,66 @@ describe('Setting up a sync action', () => {
 
     program.parse(makeArgv('foo'));
 
-    equal(action.callCount, 1);
+    equal(action.mock.callCount(), 1);
 
     program.reset();
   });
-
 });
 
 
 describe('Setting up a async action', () => {
 
   it(`should succeed for a resolved promise`, () => {
-
     const program = new Program();
-    const action = function() {
-      return Promise.resolve('foo')
-    };
-    const stub = sinon.spy(action);
-
+    const action = mock.fn( () => Promise.resolve('foo'))
     program
       .version('1.0.0')
       .command('foo', 'My foo')
-      .action(stub);
-
+      .action(action);
     program.parse(makeArgv('foo'));
 
-    equal(stub.callCount, 1);
+    equal(action.mock.callCount(), 1);
     program.reset();
-
   });
 
-  it(`should fatalError() for a rejected promise (error string)`, (done) => {
-
+  it(`should fatalError() for a rejected promise (error string)`, async () => {
     const program = new Program();
-    const action = function() {
-      return Promise.reject('Failed!')
-    };
-    const stub = sinon.spy(action);
-    const fatalError = sinon.stub(program, "fatalError");
-
+    const action = mock.fn(() => Promise.reject('Failed!'));
+    program.fatalError = mock.fn()
     program
       .version('1.0.0')
       .command('foo', 'My foo')
-      .action(stub);
+      .action(action);
 
-    program.parse(makeArgv('foo')).then(() => {}).catch(() => {}).then(() => {
-      equal(stub.callCount, 1);
-      equal(fatalError.callCount, 1);
-      done()
-    })
+    let caught = false;
+    try {
+      await program.parse(makeArgv('foo'))
+    }
+    catch {
+      equal(action.mock.callCount(), 1);
+      equal(program.fatalError.mock.callCount(), 1);
+      caught = true
+    }
+    equal(caught, true)
   });
 
-  it(`should fatalError() for a rejected promise (error object)`, (done) => {
-
+  it(`should fatalError() for a rejected promise (error object)`, async () => {
     const program = new Program();
-    const action = function() {
-      return Promise.reject(new Error('Failed!'))
-    };
-    const stub = sinon.spy(action);
-    const fatalError = sinon.stub(program, "fatalError");
-
+    const action = mock.fn(() => Promise.reject(new Error('Failed!')));
+    program.fatalError = mock.fn()
     program
       .version('1.0.0')
       .command('foo', 'My foo')
-      .action(stub);
+      .action(action);
 
-    program.parse(makeArgv('foo')).then(() => {}).catch(() => {}).then(() => {
-      equal(stub.callCount, 1);
-      equal(fatalError.callCount, 1);
-      done()
-    });
+    let caught = false;
+    try {
+      await program.parse(makeArgv('foo'))
+    } catch {
+      equal(action.mock.callCount(), 1);
+      equal(program.fatalError.mock.callCount(), 1);
+      caught = true
+    }
+    equal(caught, true)
   });
-
 });

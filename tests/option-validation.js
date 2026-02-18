@@ -1,6 +1,5 @@
-import { describe, beforeEach, afterEach, it } from 'node:test';
+import { describe, beforeEach, afterEach, it, mock } from 'node:test';
 import { deepEqual, equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -11,17 +10,16 @@ program
   .version('1.0.0');
 
 describe('Passing --option invalid-value', () => {
-  let error;
 
   beforeEach(() => {
     program.action(function() {});
-    error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn( (err) => {
       equal(err.name, 'InvalidOptionValueError');
     });
   });
 
   afterEach(() => {
-    error.restore();
+    program.fatalError.mock.restore();
     program.reset();
   });
 
@@ -76,14 +74,14 @@ describe('Passing --option invalid-value', () => {
         program.parse(makeArgv(['--list', '1.0', '--list','fake']));
       }
 
-      const count = error.callCount;
+      const count = program.fatalError.mock.callCount();
 
       equal(count, 1);
     });
   });
 
-  it(`should throw an error for promise check`, done => {
-    program.action(function() {});
+  it(`should throw an error for promise check`, async () => {
+    program.action(() => {});
 
     program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function(val) {
       return new Promise((resolve, reject) => {
@@ -97,26 +95,28 @@ describe('Passing --option invalid-value', () => {
       })
     });
     // then.catch.then to ensure the assertion is made whether the promise resolves or not (simulates `finally` behavior for node 6 & 8)
-    program.parse(makeArgv(['-t', 'i-am-invalid'])).then(() => {}).catch(() => {}).then(() => {
-      const count = error.callCount;
-
-      equal(count, 1);
-      done();
-    })
+    let caught = false;
+    try {
+      await program.parse(makeArgv(['-t', 'i-am-invalid']))
+    }
+    catch {
+      equal(program.fatalError.mock.callCount(), 1);
+      caught = true;
+    }
+    equal(caught, true);
   });
 });
 
 
 describe('Passing --option valid-value', () => {
-  let error;
 
   beforeEach(() => {
     program.action(function() {});
-    error = sinon.stub(program, "fatalError");
+    program.fatalError = mock.fn();
   });
 
   afterEach(() => {
-    error.restore();
+    program.fatalError.mock.restore();
     program.reset();
   });
 
@@ -199,13 +199,13 @@ describe('Passing --option valid-value', () => {
         program.parse(makeArgv(['--list', '1.0,0']));
       }
 
-      const count = error.callCount;
+      const count = program.fatalError.mock.callCount();
 
       equal(count, 0);
     });
   });
 
-  it(`should succeed for promise check`, done => {
+  it(`should succeed for promise check`, () => {
     let time = 0;
     program.action(function (args, options) { time = options.time });
 
@@ -220,17 +220,24 @@ describe('Passing --option valid-value', () => {
         }, 10);
       })
     });
-    // then.catch.then to ensure the assertion is made whether the promise resolves or not (simulates `finally` behavior for node 6 & 8)
-    program.parse(makeArgv(['-t', '2'])).then(() => { }).catch(() => { }).then(() => {
-      const count = error.callCount;
+    // then.catch.then to ensure the assertion is made whether the promise resolves or not (simulates `finally` behavior for node 6 & 8)\
+    let caught = false;
+    try {
+      program.parse(makeArgv(['-t', '2']))
+    }
+    catch {
+
+    }
+    finally {
       try {
-        equal(count, 0);
+        equal(program.fatalError.mock.callCount(), 0);
         equal(time, 2);
-        done();
-      } catch (e) {
-        done(e);
+        caught = true;
+      } catch {
+        caught = true;
       }
-    })
+    }
+    equal(caught, true);
   });
 });
 
@@ -242,12 +249,12 @@ describe('Passing --unknown-option (long)', () => {
       .option('-t, --time <time-in-secs>')
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');
     });
     program.parse(makeArgv('--unknown-option'));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -263,11 +270,11 @@ describe('Setting up an option with a default value', () => {
         equal(options.foo, 'bar');
       });
 
-    const error = sinon.stub(program, "fatalError");
+    program.fatalError = mock.fn();
     program.parse(makeArgv(['foo']));
-    equal(error.callCount, 0);
+    equal(program.fatalError.mock.callCount(), 0);
     program.reset();
-    error.restore();
+    program.fatalError.mock.restore();
   });
 });
 
@@ -282,11 +289,10 @@ describe('Setting up an option with an optional value', () => {
         equal(options.withOpenssl, true);
       });
 
-    const error = sinon.stub(program, "fatalError");
+    program.fatalError = mock.fn()
     program.parse(makeArgv(['foo', '--with-openssl']));
-    equal(error.callCount, 0);
+    equal(program.fatalError.mock.callCount(), 0);
     program.reset();
-    error.restore();
   });
 });
 
@@ -300,12 +306,12 @@ describe('Passing an unknown short option', () => {
       .option('-t, --time <time-in-secs>')
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');
     });
     program.parse(makeArgv('-u'));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -318,10 +324,10 @@ describe('Passing a known short option', () => {
       .option('-t <time-in-secs>')
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError");
+    program.fatalError = mock.fn()
     program.parse(makeArgv(['-t', '278']));
-    equal(error.callCount, 0);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 0);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -334,12 +340,12 @@ describe('Setting up a required option (long)', () => {
       .option('-t, --time <time-in-secs>', 'my option', null, null, true)
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'MissingOptionError');
     });
     program.parse(makeArgv('foo'));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -352,12 +358,12 @@ describe('Setting up a required option (short)', () => {
       .option('-t <time-in-secs>', 'my option', null, null, true)
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'MissingOptionError');
     });
     program.parse(makeArgv('foo'));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });
@@ -366,15 +372,16 @@ describe('Setting up a just one short option', () => {
 
   it(`should work`, () => {
 
-    const action = sinon.spy();
+
+    const action = mock.fn();
     program
       .command('foo')
       .option('-t <time-in-secs>')
       .action(action);
 
     program.parse(makeArgv(['foo', '-t', '2']));
-    equal(action.called, true);
-    deepEqual(action.args[0][1], {t:'2'});
+    equal(action.mock.callCount(), 1);
+    deepEqual(action.mock.calls[0].arguments[1], {t:'2'});
     program.reset();
   });
 });
@@ -384,7 +391,7 @@ describe('Setting up a option synopsis containing an error', () => {
 
   it(`should throw OptionSyntaxError`, () => {
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'OptionSyntaxError');
     });
 
@@ -393,8 +400,8 @@ describe('Setting up a option synopsis containing an error', () => {
       .option('-t <time-in-secs> foo', 'my option', null, null, true)
       .action(function() {});
 
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });

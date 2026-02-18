@@ -1,16 +1,16 @@
-import { describe, beforeEach, afterEach, it } from 'node:test';
+import { describe, beforeEach, afterEach, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../../lib/program.js';
 import { makeArgv } from '../utils/make-argv.js';
 
+
 describe("Issue #13 - Enter negative number as Argument", function() {
 
-  beforeEach(function () {
+  beforeEach(async function () {
 
     this.program = new Program();
-    this.action = sinon.spy();
+    this.action = mock.fn();
 
     this.program
       .version('1.0.0')
@@ -20,17 +20,17 @@ describe("Issue #13 - Enter negative number as Argument", function() {
       .argument('<c>', 'C', this.program.INT)
       .action(this.action);
 
-    this.fatalError = sinon.stub(this.program, "fatalError");
+    this.fatalError = mock.fn();
   });
 
   afterEach(function () {
-    this.fatalError.restore();
+    this.fatalError.mock.restore();
     this.program.reset();
   });
 
   it(`should not throw WrongNumberOfArgumentError with negative number as argument`, function() {
     this.program.parse(makeArgv(['solve', '1', '2', '-3']));
-    equal(this.fatalError.callCount, 0);
-    equal(this.action.callCount, 1);
+    equal(this.fatalError.mock.callCount(), 0);
+    equal(this.action.mock.callCount(), 1);
   });
 });

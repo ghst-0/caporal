@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -25,7 +24,7 @@ describe('Chaining 2 commands', () => {
 describe('Aliasing a command', () => {
 
   const program = new Program();
-  const action = sinon.stub();
+  const action = mock.fn();
 
   program
       .version('1.0.0')
@@ -35,6 +34,6 @@ describe('Aliasing a command', () => {
 
   it(`should allow calling it with alias`, () => {
     program.parse(makeArgv(['f']));
-    equal(action.callCount, 1);
+    equal(action.mock.callCount(), 1);
   });
 });

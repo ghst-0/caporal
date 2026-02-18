@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -9,7 +8,6 @@ const program = new Program();
 
 program
   .version('1.0.0');
-
 
 describe('Calling {program} help', function() {
 
@@ -20,13 +18,11 @@ describe('Calling {program} help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv('help'));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     program.reset();
   });
 
@@ -44,14 +40,13 @@ describe('Calling {program} help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {})
 
-
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv('help'));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -71,17 +66,15 @@ describe('Calling {program} help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {})
 
-
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    exit.restore();
-    help.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output command-specific help for single command program`, function() {
     program
@@ -93,16 +86,15 @@ describe('Calling {program} help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output custom global help for single command program`, function() {
     const customHelp = 'CUSTOM_HELP';
@@ -113,14 +105,14 @@ describe('Calling {program} help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv('help'));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -136,21 +128,17 @@ describe('Calling {program} help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 });
-
-
-
 
 describe('Calling {program} --help', function() {
 
@@ -161,13 +149,13 @@ describe('Calling {program} --help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -185,14 +173,13 @@ describe('Calling {program} --help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {})
 
-
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -212,17 +199,15 @@ describe('Calling {program} --help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {})
 
-
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    exit.restore();
-    help.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output command-specific help for single command program`, function() {
     program
@@ -234,16 +219,15 @@ describe('Calling {program} --help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output custom global help for single command program`, function() {
     const customHelp = 'CUSTOM_HELP';
@@ -254,14 +238,14 @@ describe('Calling {program} --help', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -277,22 +261,17 @@ describe('Calling {program} --help', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['--help', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 });
-
-
-
-
 
 describe('Calling {program} -h', function() {
 
@@ -303,13 +282,13 @@ describe('Calling {program} -h', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -327,14 +306,13 @@ describe('Calling {program} -h', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {})
 
-
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -355,16 +333,15 @@ describe('Calling {program} -h', function() {
       .action(function() {})
 
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    exit.restore();
-    help.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output command-specific help for single command program`, function() {
     program
@@ -376,16 +353,15 @@ describe('Calling {program} -h', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
-    help.restore();
-    exit.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 
   it(`should output custom global help for single command program`, function() {
     const customHelp = 'CUSTOM_HELP';
@@ -396,14 +372,14 @@ describe('Calling {program} -h', function() {
       .option('-f, --foo', 'Foo option')
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
 
@@ -419,15 +395,14 @@ describe('Calling {program} -h', function() {
       .option('-b, --bar', 'Bar option', null, 1, true)
       .action(function() {});
 
-    const help = sinon.spy(program, "_help");
-    const exit = sinon.stub(process, "exit");
+    mock.method(program, '_help');
+    process.exit = mock.fn();
     program.parse(makeArgv(['-h', 'command1']));
-    equal(help.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
     equal(program._help().includes(customHelp), true);
-    help.restore();
-    exit.restore();
+    program._help.mock.restore();
+    process.exit.mock.restore();
     program.reset();
   });
-
 });

@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -22,15 +21,15 @@ describe('Passing --foo', () => {
       .option('--footx <footx>')
       .action(function() {});
 
-    const error = sinon.stub(program, "fatalError", function(err) {
+    program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');
       equal(stripColor(err.originalMessage).includes('foor'), true);
       equal(stripColor(err.originalMessage).includes('afoo'), true);
       equal(stripColor(err.originalMessage).includes('footx'), true);
     });
     program.parse(makeArgv('--foo'));
-    equal(error.callCount, 1);
-    error.restore();
+    equal(program.fatalError.mock.callCount(), 1);
+    program.fatalError.mock.restore();
     program.reset();
   });
 });

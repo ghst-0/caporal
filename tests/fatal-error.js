@@ -1,6 +1,5 @@
-import { describe, it, beforeEach, afterEach } from 'node:test';
+import { describe, it, beforeEach, afterEach, mock } from 'node:test';
 import { equal, throws } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -17,18 +16,18 @@ describe("program.fatalError()", () => {
   });
 
   it(`should call console.error() and exit(2)`, () => {
-    const error = sinon.stub(console, 'error').withArgs("\nfoo");
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program.fatalError(new Error("foo"));
 
-    equal(error.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(console.error.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
   });
 
   it(`should call console.error() and exit(2) - verbose`, () => {
-    const error = sinon.stub(console, 'error').withArgs(sinon.match('Error: foo\n    at '));
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program
       .command('foo', 'Fooooo')
@@ -36,14 +35,13 @@ describe("program.fatalError()", () => {
 
     throws(program.parse.bind(program, makeArgv(['foo', '-v'])))
 
-    // TODO: Mocking
-    equal(error.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(console.error.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
   });
 
   it(`should call console.error() and exit(2) - normal`, () => {
-    const error = sinon.stub(console, 'error').withArgs("\nfoo");
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program
       .command('foo', 'Fooooo')
@@ -51,13 +49,13 @@ describe("program.fatalError()", () => {
 
     throws(program.parse.bind(program, makeArgv(['foo'])));
 
-    equal(error.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(console.error.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
   });
 
-  it(`should call console.error() and exit(2) - async`, (done) => {
-    const error = sinon.stub(console, 'error').withArgs("\nfoo");
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+  it(`should call console.error() and exit(2) - async`, async () => {
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program
       .command('foo', 'Fooooo')
@@ -67,16 +65,20 @@ describe("program.fatalError()", () => {
         });
       });
 
-    program.parse(makeArgv(['foo'])).catch(() => {
-      equal(error.callCount, 1);
-      equal(exit.callCount, 1);
-      done();
-    });
+    let caught = false;
+    try {
+      await program.parse(makeArgv(['foo']))
+    } catch {
+      equal(console.error.mock.callCount(), 1);
+      equal(process.exit.mock.callCount(), 1);
+      caught = true;
+    }
+    equal(caught, true);
   });
 
   it(`should call console.error() and exit(2) - throw non-exception sync`, () => {
-    const error = sinon.stub(console, 'error').withArgs("\nfoo");
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program
       .command('foo', 'Fooooo')
@@ -84,13 +86,13 @@ describe("program.fatalError()", () => {
 
     throws(program.parse.bind(program, makeArgv(['foo'])));
 
-    equal(error.callCount, 1);
-    equal(exit.callCount, 1);
+    equal(console.error.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
   });
 
-  it(`should call console.error() and exit(2) - throw non-exception async`, (done) => {
-    const error = sinon.stub(console, 'error').withArgs("\nfoo");
-    const exit = sinon.stub(process, 'exit').withArgs(2);
+  it(`should call console.error() and exit(2) - throw non-exception async`, async () => {
+    console.error = mock.fn();
+    process.exit = mock.fn();
 
     program
       .command('foo', 'Fooooo')
@@ -100,15 +102,20 @@ describe("program.fatalError()", () => {
         });
       });
 
-    program.parse(makeArgv(['foo'])).catch(() => {
-      equal(error.callCount, 1);
-      equal(exit.callCount, 1);
-      done();
-    });
+    let caught = false;
+    try {
+      await program.parse(makeArgv(['foo']))
+    }
+    catch {
+      equal(console.error.mock.callCount(), 1);
+      equal(process.exit.mock.callCount(), 1);
+      caught = true;
+    }
+    equal(caught, true);
   });
 
   afterEach(function () {
-    console.error.restore();
-    process.exit.restore();
+    console.error.mock.restore();
+    process.exit.mock.restore();
   })
 });

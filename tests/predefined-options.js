@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, it, mock } from 'node:test';
 import { equal } from 'node:assert/strict';
-import sinon from 'sinon';
 
 import { Program } from '../lib/program.js';
 import { makeArgv } from './utils/make-argv.js';
@@ -13,23 +12,23 @@ program
 describe('Predefined options', function() {
 
   it(`-V should return program version (${program.version()})`, function() {
-    const version = sinon.stub(program, "version");
-    const exit = sinon.stub(process, "exit");
+    program.version = mock.fn();
+    process.exit = mock.fn();
     program.parse(makeArgv('-V'));
-    equal(version.called, true);
-    equal(exit.callCount, 1);
-    exit.restore();
-    version.restore();
+    equal(program.version.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    process.exit.mock.restore();
+    program.version.mock.restore();
   });
 
   it(`--version should return program version (${program.version()})`, function() {
-    const version = sinon.stub(program, "version");
-    const exit = sinon.stub(process, "exit");
+    program.version = mock.fn();
+    process.exit = mock.fn();
     program.parse(makeArgv('--version'));
-    equal(version.called, true);
-    equal(exit.callCount, 1);
-    exit.restore();
-    version.restore();
+    equal(program.version.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    process.exit.mock.restore();
+    program.version.mock.restore();
   });
 
   it(`-h should call help() when only one command`, function() {
@@ -37,13 +36,13 @@ describe('Predefined options', function() {
       .reset()
       .command('foo', 'My foo');
 
-    const exit = sinon.stub(process, "exit");
-    const help = sinon.spy(program, "_help");
+    process.exit = mock.fn();
+    mock.method(program, '_help');
     program.parse(makeArgv(['foo', '-h']));
-    equal(help.called, true);
-    equal(exit.callCount, 1);
-    exit.restore();
-    help.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
   });
 
   it(`-h should call help() when more than one command`, function() {
@@ -52,12 +51,12 @@ describe('Predefined options', function() {
       .command('foo', 'My foo')
       .command('bar', 'My bar');
 
-    const exit = sinon.stub(process, "exit");
-    const help = sinon.spy(program, "_help");
+    process.exit = mock.fn();
+    mock.method(program, '_help');
     program.parse(makeArgv(['foo', '-h']));
-    equal(help.called, true);
-    equal(exit.callCount, 1);
-    exit.restore();
-    help.restore();
+    equal(program._help.mock.callCount(), 1);
+    equal(process.exit.mock.callCount(), 1);
+    program._help.mock.restore();
+    process.exit.mock.restore();
   });
 });
