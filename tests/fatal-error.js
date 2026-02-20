@@ -8,7 +8,7 @@ let program;
 
 describe("program.fatalError()", () => {
 
-  beforeEach(function () {
+  beforeEach(() => {
     program = new Program();
 
     program
@@ -114,7 +114,7 @@ describe("program.fatalError()", () => {
     equal(caught, true);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     console.error.mock.restore();
     process.exit.mock.restore();
   })

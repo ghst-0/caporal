@@ -12,7 +12,7 @@ program
 describe('Passing --option invalid-value', () => {
 
   beforeEach(() => {
-    program.action(function() {});
+    program.action(() => {});
     program.fatalError = mock.fn( (err) => {
       equal(err.name, 'InvalidOptionValueError');
     });
@@ -23,16 +23,16 @@ describe('Passing --option invalid-value', () => {
     program.reset();
   });
 
-  ['regex', 'function', 'STRING', 'INT', 'BOOL', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)', 'LIST(repeated)'].forEach(function(checkType) {
+  for (const checkType of ['regex', 'function', 'STRING', 'INT', 'BOOL', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)', 'LIST(repeated)']) {
     it(`should throw an error for ${checkType} check`, () => {
-      program.action(function() {});
+      program.action(() => {});
 
       if (checkType === 'regex') {
         program.option('-t, --time <time-in-secs>', 'Time in seconds', /^\d+$/);
         program.parse(makeArgv(['-t', 'i-am-invalid']));
 
       } else if(checkType === 'function') {
-        program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function(val) {
+        program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
           const o = Number.parseInt(val);
           if (Number.isNaN(o) || o <= 0) {
             throw new Error("'time' must be a valid number")
@@ -78,19 +78,21 @@ describe('Passing --option invalid-value', () => {
 
       equal(count, 1);
     });
-  });
+  }
 
   it(`should throw an error for promise check`, async () => {
     program.action(() => {});
 
-    program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function(val) {
+    program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           const o = Number.parseInt(val);
           if (Number.isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
-          resolve(o);
+          else {
+            resolve(o);
+          }
         }, 10);
       })
     });
@@ -111,7 +113,7 @@ describe('Passing --option invalid-value', () => {
 describe('Passing --option valid-value', () => {
 
   beforeEach(() => {
-    program.action(function() {});
+    program.action(() => {});
     program.fatalError = mock.fn();
   });
 
@@ -120,20 +122,20 @@ describe('Passing --option valid-value', () => {
     program.reset();
   });
 
-  ['regex', 'function', 'STRING', 'INT', 'BOOL', 'BOOL(implicit)', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)'].forEach(function(checkType) {
+  ['regex', 'function', 'STRING', 'INT', 'BOOL', 'BOOL(implicit)', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)'].forEach((checkType) => {
     it(`should succeed for ${checkType} check`, () => {
       if (checkType === 'regex') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.time, '234');
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', /^\d+$/);
         program.parse(makeArgv(['-t', '234']));
 
       } else if (checkType === 'function') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.time, 2);
         });
-        program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function (val) {
+        program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
           const o = Number.parseInt(val);
           if (Number.isNaN(o) || o <= 0) {
             throw new Error("FOOOO")
@@ -143,56 +145,56 @@ describe('Passing --option valid-value', () => {
         program.parse(makeArgv(['-t', '2']));
 
       } else if (checkType === 'STRING') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.file, 'foo')
         });
         program.option('-f, --file <file>', 'File', program.STRING);
         program.parse(makeArgv(['-f', 'foo']));
 
       } else if (checkType === 'INT') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.time, 282);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', program.INT);
         program.parse(makeArgv(['-t', '282']));
 
       } else if (checkType === 'BOOL') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.happy, true);
         });
         program.option('--happy <value>', 'Am I happy ?', program.BOOLEAN);
         program.parse(makeArgv(['--happy', 'yes']));
 
       } else if (checkType === 'BOOL(implicit)') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.happy, true);
         });
         program.option('--happy', 'Am I happy ?', program.BOOLEAN);
         program.parse(makeArgv(['--happy']));
 
       } else if (checkType === 'FLOAT') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           equal(options.time, 2.8);
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds', program.FLOAT);
         program.parse(makeArgv(['-t', '2.8']));
 
       } else if (checkType === 'LIST(int)') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           deepEqual(options.list, [1, 8]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.INT);
         program.parse(makeArgv(['--list', '1,8']));
 
       } else if (checkType === 'LIST(bool)') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           deepEqual(options.list, [true, false, true, false, true, false]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.BOOL);
         program.parse(makeArgv(['--list', 'true,0,yes,no,1,false']));
 
       } else if (checkType === 'LIST(float)') {
-        program.action(function (args, options) {
+        program.action((args, options) => {
           deepEqual(options.list, [1.0, 0]);
         });
         program.option('-l, --list <list>', 'My list', program.LIST | program.FLOAT);
@@ -207,16 +209,18 @@ describe('Passing --option valid-value', () => {
 
   it(`should succeed for promise check`, () => {
     let time = 0;
-    program.action(function (args, options) { time = options.time });
+    program.action((args, options) => { time = options.time });
 
-    program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', function (val) {
+    program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           const o = Number.parseInt(val);
           if (Number.isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
-          resolve(o);
+          else {
+            resolve(o);
+          }
         }, 10);
       })
     });
@@ -226,7 +230,7 @@ describe('Passing --option valid-value', () => {
       program.parse(makeArgv(['-t', '2']))
     }
     catch {
-
+      /**/
     }
     finally {
       try {
@@ -247,7 +251,7 @@ describe('Passing --unknown-option (long)', () => {
   it(`should throw UnknownOptionError`, () => {
     program
       .option('-t, --time <time-in-secs>')
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');
@@ -266,7 +270,7 @@ describe('Setting up an option with a default value', () => {
       .reset()
       .command('foo', 'Fooooo')
       .option('--foo <foo-value>', 'My bar', /^[a-z]+$/, 'bar')
-      .action(function(args, options){
+      .action((args, options) =>{
         equal(options.foo, 'bar');
       });
 
@@ -285,7 +289,7 @@ describe('Setting up an option with an optional value', () => {
       .reset()
       .command('foo', 'Fooooo')
       .option('--with-openssl [path]', 'Compile with openssl')
-      .action(function(args, options){
+      .action((args, options) => {
         equal(options.withOpenssl, true);
       });
 
@@ -304,7 +308,7 @@ describe('Passing an unknown short option', () => {
     program
       .reset()
       .option('-t, --time <time-in-secs>')
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');
@@ -322,7 +326,7 @@ describe('Passing a known short option', () => {
     program
       .reset()
       .option('-t <time-in-secs>')
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn()
     program.parse(makeArgv(['-t', '278']));
@@ -338,7 +342,7 @@ describe('Setting up a required option (long)', () => {
     program
       .command('foo')
       .option('-t, --time <time-in-secs>', 'my option', null, null, true)
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn((err) => {
       equal(err.name, 'MissingOptionError');
@@ -356,7 +360,7 @@ describe('Setting up a required option (short)', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', null, null, true)
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn((err) => {
       equal(err.name, 'MissingOptionError');
@@ -398,7 +402,7 @@ describe('Setting up a option synopsis containing an error', () => {
     program
       .command('foo')
       .option('-t <time-in-secs> foo', 'my option', null, null, true)
-      .action(function() {});
+      .action(() => {});
 
     equal(program.fatalError.mock.callCount(), 1);
     program.fatalError.mock.restore();

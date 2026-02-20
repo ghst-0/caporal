@@ -412,13 +412,13 @@ prog
   .argument('<kind>', 'Kind of pizza', ["margherita", "hawaiian", "fredo"])
   .argument('<from-store>', 'Which store to order from')
   // enable auto-completion for <from-store> argument using a sync function returning an array
-  .complete(function() {
+  .complete(() => {
     return ['store-1', 'store-2', 'store-3', 'store-4', 'store-5'];
   })
 
   .argument('<account>', 'Which account id to use')
   // enable auto-completion for <account> argument using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['account-1', 'account-2']);
   })
 
@@ -426,7 +426,7 @@ prog
   .option('-d, --discount <amount>', 'Discount offer', prog.FLOAT)
   .option('-p, --pay-by <mean>', 'Pay by option')
   // enable auto-completion for -p | --pay-by option using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['cash', 'credit-card']);
   })
 
@@ -442,13 +442,13 @@ prog
   .command('return', 'Return an order')
   .argument('<order-id>', 'Order id')
   // enable auto-completion for <order-id> argument using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['#82792', '#71727', '#526Z52']);
   })
   .argument('<to-store>', 'Store id')
   .option('--ask-change <other-kind-pizza>', 'Ask for other kind of pizza')
   // enable auto-completion for --ask-change option using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(["margherita", "hawaiian", "fredo"]);
   })
   .option('--say-something <something>', 'Say something to the manager')

@@ -9,14 +9,14 @@ const program = new Program();
 program
   .version('1.0.0');
 
-describe('Calling {program} help', function() {
+describe('Calling {program} help', () => {
 
-  it(`should output global help for single command program`, function() {
+  it(`should output global help for single command program`, () => {
     program
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -26,19 +26,19 @@ describe('Calling {program} help', function() {
     program.reset();
   });
 
-  it(`should output global help for multiple commands program`, function() {
+  it(`should output global help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -50,7 +50,7 @@ describe('Calling {program} help', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for multiple commands program`, function() {
+  it(`should output command-specific help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -58,13 +58,13 @@ describe('Calling {program} help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -76,7 +76,7 @@ describe('Calling {program} help', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for single command program`, function() {
+  it(`should output command-specific help for single command program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -84,7 +84,7 @@ describe('Calling {program} help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -96,14 +96,14 @@ describe('Calling {program} help', function() {
     program.reset();
   });
 
-  it(`should output custom global help for single command program`, function() {
+  it(`should output custom global help for single command program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .help(customHelp)
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -116,7 +116,7 @@ describe('Calling {program} help', function() {
     program.reset();
   });
 
-  it(`should output specific command help for a program`, function() {
+  it(`should output specific command help for a program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .description('my desc')
@@ -126,7 +126,7 @@ describe('Calling {program} help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -140,14 +140,14 @@ describe('Calling {program} help', function() {
   });
 });
 
-describe('Calling {program} --help', function() {
+describe('Calling {program} --help', () => {
 
-  it(`should output global help for single command program`, function() {
+  it(`should output global help for single command program`, () => {
     program
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -159,19 +159,19 @@ describe('Calling {program} --help', function() {
     program.reset();
   });
 
-  it(`should output global help for multiple commands program`, function() {
+  it(`should output global help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -183,7 +183,7 @@ describe('Calling {program} --help', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for multiple commands program`, function() {
+  it(`should output command-specific help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -191,13 +191,13 @@ describe('Calling {program} --help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -209,7 +209,7 @@ describe('Calling {program} --help', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for single command program`, function() {
+  it(`should output command-specific help for single command program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -217,7 +217,7 @@ describe('Calling {program} --help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -229,14 +229,14 @@ describe('Calling {program} --help', function() {
     program.reset();
   });
 
-  it(`should output custom global help for single command program`, function() {
+  it(`should output custom global help for single command program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .help(customHelp)
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -249,7 +249,7 @@ describe('Calling {program} --help', function() {
     program.reset();
   });
 
-  it(`should output specific command help for a program`, function() {
+  it(`should output specific command help for a program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .description('my desc')
@@ -259,7 +259,7 @@ describe('Calling {program} --help', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -273,14 +273,14 @@ describe('Calling {program} --help', function() {
   });
 });
 
-describe('Calling {program} -h', function() {
+describe('Calling {program} -h', () => {
 
-  it(`should output global help for single command program`, function() {
+  it(`should output global help for single command program`, () => {
     program
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -292,19 +292,19 @@ describe('Calling {program} -h', function() {
     program.reset();
   });
 
-  it(`should output global help for multiple commands program`, function() {
+  it(`should output global help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {})
+      .action(() => {})
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -316,7 +316,7 @@ describe('Calling {program} -h', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for multiple commands program`, function() {
+  it(`should output command-specific help for multiple commands program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -324,13 +324,13 @@ describe('Calling {program} -h', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
       .command('command2', '2nd command')
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {})
+      .action(() => {})
 
 
     mock.method(program, '_help');
@@ -343,7 +343,7 @@ describe('Calling {program} -h', function() {
     program.reset();
   });
 
-  it(`should output command-specific help for single command program`, function() {
+  it(`should output command-specific help for single command program`, () => {
     program
       .description('my desc')
       .command('command1', '1st command')
@@ -351,7 +351,7 @@ describe('Calling {program} -h', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -363,14 +363,14 @@ describe('Calling {program} -h', function() {
     program.reset();
   });
 
-  it(`should output custom global help for single command program`, function() {
+  it(`should output custom global help for single command program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .help(customHelp)
       .argument('<required>', 'Required arg')
       .argument('[optional]', 'Optional arg')
       .option('-f, --foo', 'Foo option')
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();
@@ -383,7 +383,7 @@ describe('Calling {program} -h', function() {
     program.reset();
   });
 
-  it(`should output specific command help for a program`, function() {
+  it(`should output specific command help for a program`, () => {
     const customHelp = 'CUSTOM_HELP';
     program
       .description('my desc')
@@ -393,7 +393,7 @@ describe('Calling {program} -h', function() {
       .argument('[optional]', 'Optional arg', null, 2)
       .option('-f, --foo', 'Foo option')
       .option('-b, --bar', 'Bar option', null, 1, true)
-      .action(function() {});
+      .action(() => {});
 
     mock.method(program, '_help');
     process.exit = mock.fn();

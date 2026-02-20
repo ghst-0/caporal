@@ -9,9 +9,9 @@ const program = new Program();
 program
   .version('1.0.0');
 
-describe('Predefined options', function() {
+describe('Predefined options', () => {
 
-  it(`-V should return program version (${program.version()})`, function() {
+  it(`-V should return program version (${program.version()})`, () => {
     program.version = mock.fn();
     process.exit = mock.fn();
     program.parse(makeArgv('-V'));
@@ -21,7 +21,7 @@ describe('Predefined options', function() {
     program.version.mock.restore();
   });
 
-  it(`--version should return program version (${program.version()})`, function() {
+  it(`--version should return program version (${program.version()})`, () => {
     program.version = mock.fn();
     process.exit = mock.fn();
     program.parse(makeArgv('--version'));
@@ -31,7 +31,7 @@ describe('Predefined options', function() {
     program.version.mock.restore();
   });
 
-  it(`-h should call help() when only one command`, function() {
+  it(`-h should call help() when only one command`, () => {
     program
       .reset()
       .command('foo', 'My foo');
@@ -45,7 +45,7 @@ describe('Predefined options', function() {
     process.exit.mock.restore();
   });
 
-  it(`-h should call help() when more than one command`, function() {
+  it(`-h should call help() when more than one command`, () => {
     program
       .reset()
       .command('foo', 'My foo')

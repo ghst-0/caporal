@@ -19,7 +19,7 @@ describe('Passing --foo', () => {
       .option('--foor <foor>')
       .option('--afoo <afoo>')
       .option('--footx <footx>')
-      .action(function() {});
+      .action(() => {});
 
     program.fatalError = mock.fn((err) => {
       equal(err.name, 'UnknownOptionError');

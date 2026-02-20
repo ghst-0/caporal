@@ -11,13 +11,13 @@ prog
   .argument('<kind>', 'Kind of pizza', ["margherita", "hawaiian", "fredo"])
   .argument('<from-store>', 'Which store to order from')
   // enable auto-completion for <from-store> argument using a sync function returning an array
-  .complete(function() {
+  .complete(() => {
     return ['store-1', 'store-2', 'store-3', 'store-4', 'store-5'];
   })
 
   .argument('<account>', 'Which account id to use')
   // enable auto-completion for <account> argument using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['account-1', 'account-2']);
   })
 
@@ -25,14 +25,14 @@ prog
   .option('-d, --discount <amount>', 'Discount offer', prog.FLOAT)
   .option('-p, --pay-by <mean>', 'Pay by option')
   // enable auto-completion for -p | --pay-by argument using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['cash', 'credit-card']);
   })
 
   // --extra will be auto-magicaly autocompleted by providing the user with 3 choices
   .option('-e <ingredients>', 'Add extra ingredients', ['pepperoni', 'onion', 'cheese'])
   .option('--add-ingredients <ingredients>', 'Add extra ingredients', prog.LIST)
-  .action(function(args, options) {
+  .action((args, options) => {
     console.info("Command 'order' called with:");
     console.info("arguments: %j", args);
     console.info("options: %j", options);
@@ -45,17 +45,17 @@ prog
   // <kind> will be auto-magicaly autocompleted by providing the user with 3 choices
   .argument('<order-id>', 'Order id')
   // enable auto-completion for <from-store> argument using a Promise
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(['#82792', '#71727', '#526Z52']);
   })
   .argument('<to-store>', 'Store id')
   .option('--ask-change <other-kind-pizza>', 'Ask for other kind of pizza')
-  .complete(function() {
+  .complete(() => {
     return Promise.resolve(["margherita", "hawaiian", "fredo"]);
   })
   .option('--say-something <something>', 'Say something to the manager')
-  .action(function(args, options) {
-    return Promise.resolve("wooooo").then(function (ret) {
+  .action((args, options) => {
+    return Promise.resolve("wooooo").then((ret) => {
       console.info("Command 'return' called with:");
       console.info("arguments: %j", args);
       console.info("options: %j", options);

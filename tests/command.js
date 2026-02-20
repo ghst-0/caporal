@@ -11,9 +11,9 @@ describe('Chaining 2 commands', () => {
   program
       .version('1.0.0')
     .command('foo')
-    .action(function() {})
+    .action(() => {})
     .command('bar')
-    .action(function() {})
+    .action(() => {})
 
   it(`should generate 2 commands`, () => {
     program.parse(makeArgv(['foo']));

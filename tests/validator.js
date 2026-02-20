@@ -40,7 +40,7 @@ describe('Setting up an invalid validator (boolean)', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', true)
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
     equal(program.fatalError.mock.callCount(), 1);
@@ -56,7 +56,7 @@ describe('Setting up an option without validator', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option')
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
     deepEqual(program.getCommands()[0]._options[0].getChoices(), []);
@@ -71,7 +71,7 @@ describe('Setting up an option with an non-Array validator', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', program.INT)
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
     deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
@@ -86,7 +86,7 @@ describe('Setting up an option with a function validator', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', opt => opt)
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
     deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
@@ -101,7 +101,7 @@ describe('Setting up an option with a promise validator', () => {
     program
       .command('foo')
       .option('-t <time-in-secs>', 'my option', opt => Promise.resolve(opt))
-      .action(function() {});
+      .action(() => {});
 
     program.parse(makeArgv(['foo', '-t', '2982']));
     deepEqual(program.getCommands()[0]._options[0]._validator.getChoices(), []);
