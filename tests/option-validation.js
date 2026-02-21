@@ -34,7 +34,7 @@ describe('Passing --option invalid-value', () => {
       } else if(checkType === 'function') {
         program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
           const o = Number.parseInt(val);
-          if (Number.isNaN(o) || o <= 0) {
+          if (isNaN(o) || o <= 0) {
             throw new Error("'time' must be a valid number")
           }
           return o;
@@ -87,7 +87,7 @@ describe('Passing --option invalid-value', () => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           const o = Number.parseInt(val);
-          if (Number.isNaN(o) || o <= 0) {
+          if (isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
           else {
@@ -122,7 +122,7 @@ describe('Passing --option valid-value', () => {
     program.reset();
   });
 
-  ['regex', 'function', 'STRING', 'INT', 'BOOL', 'BOOL(implicit)', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)'].forEach((checkType) => {
+  for (const checkType of ['regex', 'function', 'STRING', 'INT', 'BOOL', 'BOOL(implicit)', 'FLOAT', 'LIST(int)', 'LIST(bool)', 'LIST(float)']) {
     it(`should succeed for ${checkType} check`, () => {
       if (checkType === 'regex') {
         program.action((args, options) => {
@@ -137,7 +137,7 @@ describe('Passing --option valid-value', () => {
         });
         program.option('-t, --time <time-in-secs>', 'Time in seconds, superior to zero', (val) => {
           const o = Number.parseInt(val);
-          if (Number.isNaN(o) || o <= 0) {
+          if (isNaN(o) || o <= 0) {
             throw new Error("FOOOO")
           }
           return o;
@@ -205,7 +205,7 @@ describe('Passing --option valid-value', () => {
 
       equal(count, 0);
     });
-  });
+  }
 
   it(`should succeed for promise check`, () => {
     let time = 0;
@@ -215,7 +215,7 @@ describe('Passing --option valid-value', () => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           const o = Number.parseInt(val);
-          if (Number.isNaN(o) || o <= 0) {
+          if (isNaN(o) || o <= 0) {
             reject(new Error("FOOOO"));
           }
           else {
