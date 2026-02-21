@@ -12,7 +12,7 @@
 
 Simply add Caporal as a dependency:
 ```bash
-$ npm install caporal
+$ pnpm install caporal
 ```
 ## Glossary
 
