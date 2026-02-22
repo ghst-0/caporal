@@ -8,7 +8,7 @@
     "test": "node --experimental-test-coverage --test tests/*.js tests/issues/*.js"
   },
   "engines": {
-    "node": ">= 8"
+    "node": ">= 20"
   },
   "homepage": "https://github.com/mattallty/Caporal.js",
   "keywords": [
