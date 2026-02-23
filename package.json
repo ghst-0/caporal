@@ -1,5 +1,5 @@
 {
-  "name": "@alexbosworth/caporal",
+  "name": "caporal",
   "description": "A full-featured framework for building command line applications (cli) with node.js",
   "main": "index.js",
   "types": "index.d.ts",
